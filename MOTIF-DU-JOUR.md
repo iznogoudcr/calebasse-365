@@ -10,6 +10,7 @@ est automatique : un commit poussé sur `main` met la plateforme en ligne.
 | | |
 |---|---|
 | Source | `index.html` — fichier unique, autonome, à la racine du dépôt |
+| Contrôle | `node verify.mjs` — à passer avant tout commit |
 | Registre | bloc délimité par `/* === MOTIFS:START` et `/* === MOTIFS:END` |
 | Jour 1 | 19 août 2026 · Jour 365 : 18 août 2027 |
 | Mise en ligne | commit sur `main` → déploiement Netlify automatique |
@@ -30,30 +31,37 @@ est automatique : un commit poussé sur `main` met la plateforme en ligne.
    en ajoutant une virgule après l'entrée précédente. Le registre est
    **append-only** : ne jamais modifier, réordonner ni supprimer une entrée
    déjà publiée.
-5. **Vérifier** avant de commiter :
-   - `python3 -m http.server` puis charger la page — aucune erreur console,
-     le compteur affiche le bon nombre de motifs imprimés ;
-   - le raccord de chaque nouvelle tuile est invisible dans la bande répétée
-     (un tracé qui touche `x=0` à la hauteur `y` doit toucher `x=100` à la
-     même hauteur, idem pour `y=0` / `y=100`) ;
-   - le JSON du tableau reste valide (virgules, apostrophes échappées).
-   Si la vérification échoue, corriger avant de commiter — ne jamais pousser
-   une page cassée.
+5. **Vérifier** avant de commiter, dans cet ordre :
+   - `node verify.mjs` — structure du registre, numérotation, unicité du nom
+     et du tracé, tuile dans ses bornes. **Sortie non nulle = ne pas commiter.**
+   - `python3 -m http.server 8742` puis charger la page : aucune erreur console,
+     le compteur affiche le bon nombre de motifs imprimés.
+   - Regarder l'aperçu 2 × 2 en haut de page : le dessin doit se poursuivre
+     d'une tuile à l'autre sans rupture. C'est le seul contrôle que la machine
+     ne fait pas à ta place.
 6. **Commiter et pousser** sur `main`, un commit par exécution :
    `Motif 007 — Nom du motif` (ou `Motifs 007-009 — rattrapage` si plusieurs).
    Le déploiement suit tout seul.
 
 ## Contraintes de dessin
 
-- **Format** : tuile `viewBox="0 0 100 100"`, raccord invisible sur les quatre
-  bords. Tout élément coupé par un bord est répété à l'identique sur le bord
-  opposé.
+- **Format** : tuile `viewBox="0 0 100 100"`. Toute la géométrie reste entre
+  0 et 100 — rien ne dépasse.
+- **Raccord** : le rendu dessine la tuile *et ses huit voisines* dans le
+  `<pattern>`, donc les débords rognés d'un côté sont fournis par la copie
+  d'en face — l'épaisseur des traits au raccord est correcte par construction.
+  Il reste une seule règle de dessin, celle de la continuité : ce qui sort par
+  un bord doit rentrer par le bord opposé **à la même coordonnée**. Un trait
+  qui quitte la tuile en `(100, 40)` a besoin de son entrée en `(0, 40)`.
+- **Terminaisons** : `cap:'butt'` par défaut. Deux extrémités qui se rejoignent
+  au raccord ne se raccordent proprement que si elles sont colinéaires — faire
+  traverser un zigzag au milieu d'une pente, jamais sur un sommet.
 - **Nature** : une surface, pas une icône. Le motif doit tenir en fond de plan,
   en textile, en décor animé.
 - **Écriture** : SVG littéral dans le champ `inner`, figé une fois publié.
   Pas de fonction génératrice — un motif imprimé ne bouge plus.
 - **Champs** : `day`, `name`, `family`, `note`, `mode` (`'stroke'` ou `'fill'`),
-  `weight`, `inner`.
+  `weight`, `cap` (optionnel, `'butt'` par défaut), `inner`.
 - **Variété** : ne pas reprendre la famille de la veille, ni un tracé déjà
   publié. Familles ouvertes — Registres, Trames, Tissages, Damiers, Vagues,
   Écailles, Treillis, Semis, Chevrons, Spirales, Cercles, Grains.

@@ -310,7 +310,7 @@
 /* === MOTIFS:START =================================================
    Registre append-only. Une entrée par jour, ajoutée en fin de liste.
    Ne jamais modifier une entrée déjà publiée.
-   Champs : day, name, family, note, mode ('stroke'|'fill'), weight, inner
+   Champs : day, name, family, note, mode ('stroke'|'fill'), weight, cap, inner
 =================================================================== */
   var MOTIFS = [
     {
@@ -320,10 +320,11 @@
       note:'Le peigne est l’outil qui divise le pagne adinkra en cases avant que le tampon ne touche l’étoffe. Ici l’outil devient le sujet : deux lignes de partage, leurs dents opposées, et une frise en dents de scie qui referme le registre. La tuile se raccorde sur ses quatre bords.',
       mode:'stroke',
       weight:4.5,
+      cap:'butt',
       inner:'<path d="M0 0 H100"/><path d="M0 50 H100"/>'
            +'<path d="M0 0 V13"/><path d="M12.5 0 V13"/><path d="M25 0 V13"/><path d="M37.5 0 V13"/><path d="M50 0 V13"/><path d="M62.5 0 V13"/><path d="M75 0 V13"/><path d="M87.5 0 V13"/><path d="M100 0 V13"/>'
            +'<path d="M6.25 50 V37"/><path d="M18.75 50 V37"/><path d="M31.25 50 V37"/><path d="M43.75 50 V37"/><path d="M56.25 50 V37"/><path d="M68.75 50 V37"/><path d="M81.25 50 V37"/><path d="M93.75 50 V37"/>'
-           +'<path d="M0 88 L12.5 64 L25 88 L37.5 64 L50 88 L62.5 64 L75 88 L87.5 64 L100 88"/>'
+           +'<path d="M0 76 L6.25 64 L18.75 88 L31.25 64 L43.75 88 L56.25 64 L68.75 88 L81.25 64 L93.75 88 L100 76"/>'
     }
 /* === MOTIFS:END =================================================== */
   ];
@@ -343,12 +344,12 @@
   function groupAttrs(m,color){
     return m.mode==='fill'
       ? 'fill="'+color+'"'
-      : 'fill="none" stroke="'+color+'" stroke-width="'+m.weight+'" stroke-linecap="square" stroke-linejoin="miter"';
+      : 'fill="none" stroke="'+color+'" stroke-width="'+m.weight+'" stroke-linecap="'+(m.cap||'butt')+'" stroke-linejoin="miter"';
   }
   function miniSvg(m,color){
     var attrs = m.mode==='fill'
       ? 'fill="'+color+'"'
-      : 'fill="none" stroke="'+color+'" stroke-width="'+Math.max(m.weight*2.4,9)+'" stroke-linecap="square"';
+      : 'fill="none" stroke="'+color+'" stroke-width="'+Math.max(m.weight*2.4,9)+'" stroke-linecap="'+(m.cap||'butt')+'"';
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="18" height="18">'
          + '<g '+attrs+'>'+m.inner+'</g></svg>';
   }
@@ -358,10 +359,17 @@
          + '<g '+groupAttrs(m,color)+'>'+m.inner+'</g></svg>';
   }
   function patternSvg(m,color,w,h){
-    var id='motif-'+pad3(m.day);
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'">'
-         + '<defs><pattern id="'+id+'" width="100" height="100" patternUnits="userSpaceOnUse">'
-         + '<g '+groupAttrs(m,color)+'>'+m.inner+'</g></pattern></defs>'
+    var id='motif-'+pad3(m.day), gid='tuile-'+pad3(m.day), uses='';
+    /* Chaque tuile d'un <pattern> rogne son propre contenu : un trait oblique
+       qui touche un bord y perd un coin. On place donc la tuile et ses huit
+       voisines — le débord rogné d'un côté est redessiné par la copie d'en face. */
+    for(var dy=-100;dy<=100;dy+=100)
+      for(var dx=-100;dx<=100;dx+=100)
+        uses+='<use href="#'+gid+'" xlink:href="#'+gid+'" x="'+dx+'" y="'+dy+'"/>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
+         + 'viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'">'
+         + '<defs><g id="'+gid+'" '+groupAttrs(m,color)+'>'+m.inner+'</g>'
+         + '<pattern id="'+id+'" width="100" height="100" patternUnits="userSpaceOnUse">'+uses+'</pattern></defs>'
          + '<rect width="'+w+'" height="'+h+'" fill="url(#'+id+')"/></svg>';
   }
   function ink(){ return getComputedStyle(document.documentElement).getPropertyValue('--shape').trim() || '#17140F'; }
