@@ -5,266 +5,331 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Calebasse 365</title>
 <meta name="description" content="Un motif textile inédit imprimé chaque jour pendant 365 jours, sur une étoffe qui se tisse en public.">
-<meta name="color-scheme" content="light dark">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23C9A227' stroke-width='9'%3E%3Ccircle cx='50' cy='50' r='42'/%3E%3Ccircle cx='50' cy='50' r='26'/%3E%3Ccircle cx='50' cy='50' r='10'/%3E%3C/g%3E%3C/svg%3E">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0A0806">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/archivo-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/martianmono-latin.woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230A0806'/%3E%3Cg fill='none' stroke='%23EDE4D0' stroke-width='11'%3E%3Cpath d='M78 24 A38 38 0 1 0 78 76'/%3E%3Cpath d='M66 38 A20 20 0 1 0 66 62'/%3E%3C/g%3E%3C/svg%3E">
 <meta property="og:title" content="Calebasse 365">
 <meta property="og:description" content="Un motif textile inédit imprimé chaque jour pendant 365 jours.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://calebasse-365.netlify.app/">
 <style>
-  :root{
-    --cloth:#CBC2AE; --cloth-2:#D9D2C1; --panel:#E6E1D3; --panel-2:#DCD5C4;
-    --print:#17140F; --print-2:#433E33; --muted:#7C7364;
-    --rule:#B2A992; --rule-soft:#C3BAA5;
-    --brass:#856512; --kobene:#A2401F;
-    --shape:#17140F;
-    --f-display:Optima,Candara,"Gill Sans","Gill Sans MT","Trebuchet MS",sans-serif;
-    --f-body:"Iowan Old Style",Charter,Georgia,"Times New Roman",serif;
-    --f-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --cloth:#100E0B; --cloth-2:#16130F; --panel:#1B1712; --panel-2:#221D17;
-      --print:#F0E9DA; --print-2:#C3BBA9; --muted:#8A8072;
-      --rule:#2F2A22; --rule-soft:#241F19;
-      --brass:#C9A227; --kobene:#D06340;
-      --shape:#F0E9DA;
-    }
-  }
-  :root[data-theme="dark"]{
-    --cloth:#100E0B; --cloth-2:#16130F; --panel:#1B1712; --panel-2:#221D17;
-    --print:#F0E9DA; --print-2:#C3BBA9; --muted:#8A8072;
-    --rule:#2F2A22; --rule-soft:#241F19;
-    --brass:#C9A227; --kobene:#D06340;
-    --shape:#F0E9DA;
-  }
+@font-face{
+  font-family:'Archivo';
+  src:url('/fonts/archivo-latin.woff2') format('woff2');
+  font-weight:100 900; font-stretch:62% 125%; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'Martian Mono';
+  src:url('/fonts/martianmono-latin.woff2') format('woff2');
+  font-weight:100 800; font-stretch:75% 112.5%; font-style:normal; font-display:swap;
+}
 
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    margin:0;background:var(--cloth);color:var(--print);
-    font-family:var(--f-body);font-size:16px;line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
-  @media (max-width:600px){.wrap{padding:0 18px}}
+/* ══ Calebasse 365 ═══════════════════════════════════════════════════
+   La page est la cuve de teinture : noir mat, partout.
+   Le motif ne s'y affiche jamais directement — il s'imprime en noir sur
+   une étoffe claire, comme un vrai adinkra. Tout ce qui est « imprimé »
+   dans cette interface est donc clair ; tout ce qui ne l'est pas encore
+   reste dans le noir de la cuve.
+   ═══════════════════════════════════════════════════════════════════ */
+:root{
+  --noir:#0A0806;
+  --noir-2:#12100B;
+  --noir-3:#1B1710;
+  --bone:#EDE4D0;
+  --bone-2:#D8CCB2;
+  --kobene:#C8402A;
+  --brass:#C8912E;
+  --muted:#8A7F6C;
+  --rule:#2A2318;
 
-  .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-  .kicker{
-    font-family:var(--f-mono);font-size:10.5px;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--brass);margin:0;
-  }
-  :is(button,a,input,[tabindex]):focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+  --f-sans:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --f-mono:'Martian Mono',ui-monospace,'SF Mono',Menlo,monospace;
 
-  /* ============ masthead ============ */
-  .top{border-bottom:1px solid var(--rule)}
-  .top .wrap{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:20px 28px}
-  .mark{
-    font-family:var(--f-display);font-weight:600;font-size:19px;
-    letter-spacing:.02em;margin:0;
-  }
-  .mark span{color:var(--brass)}
-  .ledger{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+  --gut:clamp(18px,4vw,44px);
+  --maxw:1560px;
+}
 
-  /* ============ hero ============ */
-  .hero{padding:56px 0 0;overflow:hidden}
-  .hero-grid{
-    display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
-    gap:56px;align-items:start;
-  }
-  @media (max-width:840px){.hero-grid{grid-template-columns:1fr;gap:34px}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--noir);color:var(--bone);
+  font-family:var(--f-sans);font-size:16px;line-height:1.55;
+  font-variation-settings:'wdth' 100,'wght' 400;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
 
-  .plate{
-    position:relative;background:var(--panel);border:1px solid var(--rule);
-    padding:26px;aspect-ratio:1;display:grid;place-items:center;
-    animation:rise .7s cubic-bezier(.2,.7,.3,1) both;
-  }
-  .plate svg{width:100%;height:auto;display:block}
-  .plate::after{
-    content:attr(data-no);position:absolute;bottom:9px;right:12px;
-    font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;color:var(--muted);
-  }
-  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* ── voix typographiques ─────────────────────────────────────────── */
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tag{
+  font-family:var(--f-mono);font-size:9.5px;line-height:1.5;
+  letter-spacing:.22em;text-transform:uppercase;
+  font-variation-settings:'wdth' 100,'wght' 500;
+  color:var(--muted);margin:0;
+}
+.tag--kobene{color:var(--kobene)}
+.tag--brass{color:var(--brass)}
+h1,h2,h3{font-weight:400;margin:0}
+:is(a,button,input,[tabindex]):focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+::selection{background:var(--kobene);color:var(--bone)}
 
-  .daynum{
-    font-family:var(--f-display);font-weight:600;
-    font-size:clamp(58px,11vw,112px);line-height:.86;letter-spacing:-.03em;
-    margin:0 0 6px;font-variant-numeric:tabular-nums;
-  }
-  .daynum em{font-style:normal;color:var(--muted);opacity:.55}
-  h1{
-    font-family:var(--f-display);font-weight:600;
-    font-size:clamp(27px,4vw,42px);line-height:1.05;letter-spacing:-.015em;
-    margin:14px 0 12px;text-wrap:balance;
-  }
-  .meta{
-    display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 20px;
-    font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--muted);
-  }
-  .meta b{color:var(--brass);font-weight:400}
-  .note{margin:0 0 26px;max-width:54ch;color:var(--print-2);font-size:16.5px}
-  .acts{display:flex;flex-wrap:wrap;gap:10px}
-  .btn{
-    font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    padding:10px 15px;border:1px solid var(--rule);background:transparent;color:var(--print);
-    cursor:pointer;transition:background .15s ease,border-color .15s ease,color .15s ease;
-  }
-  .btn:hover{border-color:var(--brass);color:var(--brass)}
-  .btn--solid{background:var(--print);color:var(--cloth);border-color:var(--print)}
-  .btn--solid:hover{background:var(--brass);border-color:var(--brass);color:var(--cloth)}
+/* ── logotype ────────────────────────────────────────────────────── */
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.logo__mark{width:26px;height:26px;flex:none;display:block}
+.logo__word{
+  font-size:15px;line-height:1;letter-spacing:.10em;text-transform:uppercase;
+  font-variation-settings:'wdth' 118,'wght' 800;
+}
+.logo__word i{font-style:normal;color:var(--kobene)}
 
-  /* ============ cloth band ============ */
-  .band{
-    margin-top:56px;height:190px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
-    overflow:hidden;position:relative;background:var(--cloth-2);
-    animation:press .95s cubic-bezier(.16,.84,.28,1) both .18s;
-  }
-  .band svg{width:100%;height:100%;display:block}
-  @keyframes press{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-  .band-cap{
-    display:flex;justify-content:space-between;gap:16px;padding:9px 0 0;
-    font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  }
+/* ── bandeau ─────────────────────────────────────────────────────── */
+.mast{
+  position:sticky;top:0;z-index:40;background:var(--noir);
+  border-bottom:1px solid var(--rule);
+}
+.mast .wrap{display:flex;align-items:center;justify-content:space-between;gap:18px;height:58px}
+.mast__right{display:flex;align-items:center;gap:22px}
+.mast__right .tag{white-space:nowrap}
+.mast__bar{
+  width:132px;height:5px;background:var(--noir-3);position:relative;overflow:hidden;flex:none;
+}
+.mast__bar i{position:absolute;inset:0 auto 0 0;background:var(--brass);display:block}
+@media (max-width:620px){.mast__bar{display:none}}
 
-  /* ============ sections ============ */
-  section{padding:74px 0 0}
-  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:8px}
-  .sec-head h2{font-family:var(--f-display);font-weight:600;font-size:25px;letter-spacing:-.01em;margin:0}
-  .sec-head .n{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
-  .sec-note{margin:0 0 30px;max-width:64ch;color:var(--muted);font-size:14.5px}
-  .sec-note code{font-family:var(--f-mono);font-size:.85em;color:var(--brass)}
+/* ── héros ───────────────────────────────────────────────────────── */
+.hero{position:relative;isolation:isolate;min-height:min(88vh,860px);display:flex;align-items:stretch}
+.hero__cloth{
+  position:absolute;inset:0 0 0 auto;width:min(56%,900px);
+  background:var(--bone);z-index:0;overflow:hidden;
+  clip-path:inset(0 0 0 0);
+  animation:presse 1s cubic-bezier(.16,.85,.28,1) both .15s;
+}
+.hero__cloth svg{width:100%;height:100%;display:block}
+.hero__cloth::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply;opacity:.16;
+}
+@keyframes presse{from{clip-path:inset(0 0 0 100%)}to{clip-path:inset(0 0 0 0)}}
 
-  /* ============ year cloth ============ */
-  .year-scroll{overflow-x:auto;padding-bottom:6px}
-  .year{
-    display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,20px);
-    gap:3px;min-width:min-content;
-  }
-  .cell{
-    width:20px;height:20px;padding:0;border:0;background:var(--rule-soft);
-    display:grid;place-items:center;cursor:default;position:relative;
-  }
-  .cell.pad{background:transparent}
-  .cell .pip{width:2px;height:2px;background:var(--rule);display:block}
-  .cell.done{background:var(--panel-2);cursor:pointer;color:var(--brass);transition:background .15s ease,color .15s ease}
-  .cell.done svg{width:18px;height:18px;display:block}
-  .cell.done:hover,.cell.done:focus-visible{background:var(--brass);color:var(--cloth)}
-  .cell.today{outline:1px solid var(--kobene);outline-offset:1px}
-  .year-cap{
-    display:flex;justify-content:space-between;gap:16px;margin-top:14px;
-    font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
-  }
-  .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:22px;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-  .legend i{display:inline-block;width:9px;height:9px;margin-right:7px;vertical-align:-1px}
+.hero__type{
+  position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;
+  gap:0;padding-block:clamp(40px,7vh,84px);width:100%;
+  max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gut);
+}
+.hero__no{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.daybig{
+  font-size:clamp(96px,20vw,300px);line-height:.78;letter-spacing:-.045em;margin:0;
+  font-variation-settings:'wdth' 122,'wght' 800;
+  font-variant-numeric:tabular-nums;color:var(--bone);
+  mix-blend-mode:difference;width:max-content;
+}
+.daytot{
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.2em;color:var(--muted);
+  mix-blend-mode:difference;margin:0 0 clamp(14px,2.4vh,26px);
+}
+.hero h1{
+  font-size:clamp(28px,4.6vw,64px);line-height:1;letter-spacing:-.02em;
+  font-variation-settings:'wdth' 108,'wght' 600;
+  margin:0 0 18px;max-width:14ch;text-wrap:balance;mix-blend-mode:difference;color:var(--bone);
+}
+.hero__meta{display:flex;flex-wrap:wrap;gap:6px 20px;margin:0 0 20px}
+.hero__note{
+  margin:0 0 28px;max-width:42ch;font-size:15px;line-height:1.6;color:var(--bone-2);
+  font-variation-settings:'wdth' 100,'wght' 350;
+}
+.acts{display:flex;flex-wrap:wrap;gap:9px}
+.btn{
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  font-variation-settings:'wdth' 100,'wght' 500;
+  padding:12px 18px;border:1px solid var(--rule);background:transparent;color:var(--bone);
+  cursor:pointer;text-decoration:none;display:inline-block;
+  transition:background .16s ease,color .16s ease,border-color .16s ease;
+}
+.btn:hover{border-color:var(--bone);background:var(--bone);color:var(--noir)}
+.btn--fill{background:var(--kobene);border-color:var(--kobene);color:var(--bone)}
+.btn--fill:hover{background:var(--bone);border-color:var(--bone);color:var(--noir)}
+@media (max-width:900px){
+  .hero{min-height:0}
+  .hero__cloth{position:relative;width:100%;height:46vh;inset:auto}
+  .hero{flex-direction:column-reverse}
+  .daybig,.daytot,.hero h1{mix-blend-mode:normal}
+  .hero__type{padding-block:34px 44px}
+}
 
-  /* ============ fonds ============ */
-  .toolbar{
-    display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;
-    padding:12px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-bottom:26px;
-  }
-  .ctl{display:flex;align-items:center;gap:8px}
-  .ctl > label{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  input[type="search"]{
-    font-family:var(--f-mono);font-size:12px;color:var(--print);background:var(--panel);
-    border:1px solid var(--rule);padding:7px 10px;width:172px;border-radius:0;
-  }
-  input[type="search"]::placeholder{color:var(--muted)}
-  input[type="range"]{width:84px;accent-color:var(--brass)}
-  input[type="color"]{width:28px;height:25px;padding:0;border:1px solid var(--rule);background:var(--panel);cursor:pointer}
-  .seg{display:flex;border:1px solid var(--rule)}
-  .seg button{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;padding:6px 11px;border:0;background:transparent;color:var(--muted);cursor:pointer}
-  .seg button[aria-pressed="true"]{background:var(--print);color:var(--cloth)}
-  .count{margin-left:auto;font-family:var(--f-mono);font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+/* ── bande d'étoffe ──────────────────────────────────────────────── */
+.bolt{height:clamp(120px,17vh,190px);background:var(--bone);overflow:hidden;position:relative}
+.bolt svg{width:100%;height:100%;display:block}
+.boltcap{display:flex;justify-content:space-between;gap:16px;padding-block:10px;border-bottom:1px solid var(--rule)}
 
-  .grid{display:grid;gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);
-    grid-template-columns:repeat(auto-fill,minmax(146px,1fr))}
-  .tile{
-    background:var(--panel);border:0;cursor:pointer;color:inherit;font:inherit;text-align:left;
-    padding:0;position:relative;display:flex;flex-direction:column;transition:background .15s ease;
-  }
-  .tile:hover{background:var(--panel-2)}
-  .tile__art{display:grid;place-items:center;padding:22px 18px 12px}
-  .tile__art svg{width:100%;height:auto;max-width:84px;display:block}
-  .tile__meta{padding:0 12px 13px;display:flex;flex-direction:column;gap:2px;min-height:44px}
-  .tile__name{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--print)}
-  .tile__gloss{font-size:12.5px;line-height:1.35;color:var(--muted)}
-  .tile[data-copied="1"] .tile__name{color:var(--brass)}
-  .tile__tag{position:absolute;top:8px;right:9px;font-family:var(--f-mono);font-size:9px;letter-spacing:.1em;color:var(--muted);opacity:0;transition:opacity .15s ease}
-  .tile:hover .tile__tag,.tile:focus-visible .tile__tag{opacity:1}
+/* ── sections ────────────────────────────────────────────────────── */
+.sec{padding-block:clamp(56px,9vh,110px)}
+.sec__head{display:flex;align-items:baseline;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+.sec__head h2{
+  font-size:clamp(24px,3.4vw,44px);line-height:1;letter-spacing:-.02em;
+  font-variation-settings:'wdth' 112,'wght' 700;
+}
+.sec__lede{margin:0 0 clamp(28px,4vh,48px);max-width:56ch;color:var(--muted);font-size:14.5px;line-height:1.65}
+.sec__lede b{color:var(--bone-2);font-weight:400}
+.sec__lede code{font-family:var(--f-mono);font-size:.82em;color:var(--brass)}
 
-  .caution{border-left:2px solid var(--kobene);padding:12px 0 12px 16px;margin:0 0 28px;max-width:66ch;font-size:14.5px;color:var(--print-2)}
+/* ── étoffe de l'année ───────────────────────────────────────────── */
+.yearscroll{overflow-x:auto;padding-bottom:10px;margin-inline:calc(var(--gut) * -1);padding-inline:var(--gut)}
+.year{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,var(--cell));gap:4px;min-width:min-content;--cell:24px}
+.cell{width:var(--cell);height:var(--cell);padding:0;border:0;background:var(--noir-2);position:relative;display:block}
+.cell.pad{background:transparent}
+.cell.done{background:var(--bone);cursor:pointer;color:var(--noir);transition:transform .14s ease}
+.cell.done svg{width:100%;height:100%;display:block}
+.cell.done:hover,.cell.done:focus-visible{transform:scale(1.42);z-index:3}
+.cell.today{box-shadow:0 0 0 1px var(--kobene),0 0 0 4px rgba(200,64,42,.22)}
+.yearfoot{display:flex;justify-content:space-between;gap:16px;margin-top:16px}
+.legend{display:flex;gap:24px;flex-wrap:wrap;margin-top:26px}
+.legend span{display:flex;align-items:center;gap:9px}
+.legend i{width:11px;height:11px;display:block;flex:none}
 
-  /* ============ notes ============ */
-  .notes{padding:78px 0 96px;margin-top:78px;border-top:1px solid var(--rule)}
-  .notes h2{font-family:var(--f-display);font-weight:600;font-size:22px;margin:0 0 24px}
-  .notes dl{margin:0;display:grid;gap:20px;max-width:70ch}
-  .notes dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:4px}
-  .notes dd{margin:0;color:var(--print-2);font-size:15px}
-  .colophon{margin-top:52px;font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+/* ── le fonds ────────────────────────────────────────────────────── */
+.tools{
+  display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;
+  padding-block:14px;border-block:1px solid var(--rule);margin-bottom:30px;
+}
+.ctl{display:flex;align-items:center;gap:9px}
+.ctl>label{font-family:var(--f-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+input[type="search"]{
+  font-family:var(--f-mono);font-size:11px;color:var(--bone);background:var(--noir-2);
+  border:1px solid var(--rule);padding:9px 11px;width:180px;border-radius:0;
+}
+input[type="search"]::placeholder{color:var(--muted)}
+input[type="range"]{width:88px;accent-color:var(--kobene)}
+input[type="color"]{width:30px;height:26px;padding:0;border:1px solid var(--rule);background:var(--noir-2);cursor:pointer}
+.seg{display:flex;border:1px solid var(--rule)}
+.seg button{
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:8px 12px;border:0;background:transparent;color:var(--muted);cursor:pointer;
+}
+.seg button[aria-pressed="true"]{background:var(--bone);color:var(--noir)}
+.tools .count{margin-left:auto;font-family:var(--f-mono);font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
 
-  .toast{
-    position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
-    background:var(--print);color:var(--cloth);font-family:var(--f-mono);font-size:10.5px;
-    letter-spacing:.1em;text-transform:uppercase;padding:11px 17px;
-    opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:60;
-  }
-  .toast[data-on="1"]{opacity:1;transform:translate(-50%,0)}
+.grid{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  grid-template-columns:repeat(auto-fill,minmax(132px,1fr))}
+.tile{
+  background:var(--noir-2);border:0;cursor:pointer;color:var(--bone);font:inherit;text-align:left;
+  padding:0;position:relative;display:flex;flex-direction:column;transition:background .15s ease;
+}
+.tile:hover{background:var(--noir-3)}
+.tile__art{display:grid;place-items:center;padding:24px 20px 14px}
+.tile__art svg{width:100%;height:auto;max-width:74px;display:block}
+.tile__meta{padding:0 13px 14px;display:flex;flex-direction:column;gap:3px;min-height:42px}
+.tile__name{font-family:var(--f-mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--bone)}
+.tile__gloss{font-size:11.5px;line-height:1.4;color:var(--muted);font-variation-settings:'wdth' 100,'wght' 350}
+.tile__tag{
+  position:absolute;top:9px;right:10px;font-family:var(--f-mono);font-size:8px;
+  letter-spacing:.16em;color:var(--muted);opacity:0;transition:opacity .15s ease;
+}
+.tile:hover .tile__tag,.tile:focus-visible .tile__tag{opacity:1}
+.tile[data-copied="1"]{background:var(--kobene)}
+.tile[data-copied="1"] .tile__name,.tile[data-copied="1"] .tile__gloss{color:var(--bone)}
+.subhead{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin:clamp(48px,7vh,80px) 0 12px}
+.subhead h3{font-size:clamp(19px,2.2vw,28px);letter-spacing:-.01em;font-variation-settings:'wdth' 108,'wght' 600}
+.caution{
+  border-left:2px solid var(--kobene);padding:10px 0 10px 18px;margin:0 0 30px;max-width:62ch;
+  font-size:13.5px;line-height:1.6;color:var(--muted);
+}
+.caution b{color:var(--bone-2);font-weight:400}
 
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+/* ── protocole ───────────────────────────────────────────────────── */
+.proto{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.proto>div{background:var(--noir);padding:26px 24px 30px}
+.proto dt{margin-bottom:12px}
+.proto dd{margin:0;font-size:14px;line-height:1.62;color:var(--bone-2);font-variation-settings:'wdth' 100,'wght' 350}
+.proto code{font-family:var(--f-mono);font-size:.82em;color:var(--brass)}
+
+/* ── pied ────────────────────────────────────────────────────────── */
+.foot{border-top:1px solid var(--rule);padding-block:40px 60px}
+.foot .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.foot a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule)}
+.foot a:hover{color:var(--bone);border-color:var(--bone)}
+
+/* ── notification ────────────────────────────────────────────────── */
+.toast{
+  position:fixed;left:50%;bottom:28px;transform:translate(-50%,14px);
+  background:var(--bone);color:var(--noir);
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  padding:13px 20px;opacity:0;pointer-events:none;z-index:60;
+  transition:opacity .18s ease,transform .18s ease;
+}
+.toast[data-on="1"]{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
-
-<header class="top">
+<header class="mast">
   <div class="wrap">
-    <p class="mark">Calebasse <span>365</span></p>
-    <p class="ledger" id="ledger"></p>
+    <a class="logo" href="#" aria-label="Calebasse 365 — retour en haut">
+      <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="11">
+          <path d="M78 24 A38 38 0 1 0 78 76"/>
+          <path d="M66 38 A20 20 0 1 0 66 62"/>
+        </g>
+      </svg>
+      <span class="logo__word">Calebasse<i>365</i></span>
+    </a>
+    <div class="mast__right">
+      <span class="mast__bar" aria-hidden="true"><i id="bar"></i></span>
+      <p class="tag" id="ledger"></p>
+    </div>
   </div>
 </header>
 
 <main>
 
-  <div class="hero">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div class="plate" id="plate" data-no=""></div>
-        <div>
-          <p class="kicker">Motif du jour</p>
-          <p class="daynum" id="daynum"></p>
-          <h1 id="mtitle"></h1>
-          <p class="meta" id="mmeta"></p>
-          <p class="note" id="mnote"></p>
-          <div class="acts">
-            <button class="btn btn--solid" id="copy-tile" type="button">Copier la tuile</button>
-            <button class="btn" id="copy-pattern" type="button">Copier le motif répété</button>
-            <a class="btn" href="#etoffe">Voir l’étoffe</a>
-          </div>
-        </div>
+  <section class="hero">
+    <div class="hero__cloth" id="cloth" aria-hidden="true"></div>
+    <div class="hero__type">
+      <p class="tag tag--kobene">Motif du jour</p>
+      <div class="hero__no"><p class="daybig" id="daybig"></p></div>
+      <p class="daytot" id="daytot"></p>
+      <h1 id="mtitle"></h1>
+      <div class="hero__meta" id="mmeta"></div>
+      <p class="hero__note" id="mnote"></p>
+      <div class="acts">
+        <button class="btn btn--fill" id="copy-tile" type="button">Copier la tuile</button>
+        <button class="btn" id="copy-pattern" type="button">Copier le motif répété</button>
+        <a class="btn" href="#etoffe">Voir l’étoffe</a>
       </div>
     </div>
-    <div class="band" id="band"></div>
-    <div class="wrap"><p class="band-cap"><span id="band-l"></span><span>Tuile 100 × 100 · raccord sans couture</span></p></div>
-  </div>
+  </section>
 
-  <div class="wrap">
+  <div class="bolt" id="bolt" aria-hidden="true"></div>
+  <div class="wrap"><div class="boltcap"><p class="tag" id="boltcap"></p><p class="tag">Tuile 100 × 100 · raccord sans couture</p></div></div>
 
-    <section id="etoffe">
-      <div class="sec-head"><h2>L’étoffe de l’année</h2><span class="n" id="n-year"></span></div>
-      <p class="sec-note">Un motif imprimé par jour, du 19 août 2026 au 18 août 2027. Chaque colonne est une semaine, chaque ligne un jour de la semaine — la pièce se tisse en public et le vide fait partie du dessin. Cliquez une case imprimée pour la charger en haut de page.</p>
-      <div class="year-scroll"><div class="year" id="year"></div></div>
-      <p class="year-cap"><span>août 2026</span><span>août 2027</span></p>
+  <section class="sec" id="etoffe">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2>L’étoffe de l’année</h2>
+        <p class="tag tag--brass" id="n-year"></p>
+      </div>
+      <p class="sec__lede">Un motif imprimé par jour, du 19 août 2026 au 18 août 2027. Chaque colonne est une semaine, chaque ligne un jour — <b>la pièce se tisse en public et le vide fait partie du dessin</b>. Cliquez une case imprimée pour la charger en haut de page.</p>
+      <div class="yearscroll"><div class="year" id="year"></div></div>
+      <div class="yearfoot"><p class="tag">août 2026</p><p class="tag">août 2027</p></div>
       <p class="legend">
-        <span><i style="background:var(--panel-2)"></i><span style="color:var(--brass)">Imprimé</span></span>
-        <span><i style="background:var(--rule-soft)"></i>À venir</span>
-        <span><i style="background:transparent;outline:1px solid var(--kobene)"></i>Aujourd’hui</span>
+        <span><i style="background:var(--bone)"></i><span class="tag">Imprimé</span></span>
+        <span><i style="background:var(--noir-2)"></i><span class="tag">Dans la cuve</span></span>
+        <span><i style="background:transparent;box-shadow:0 0 0 1px var(--kobene)"></i><span class="tag">Aujourd’hui</span></span>
       </p>
-    </section>
+    </div>
+  </section>
 
-    <section id="fonds">
-      <div class="sec-head"><h2>Le fonds</h2><span class="n" id="count"></span></div>
-      <p class="sec-note">Sous le calendrier, la réserve permanente : des formes paramétriques qui écrivent leur propre <code>path</code>, et un jeu de symboles Adinkra. « Régénérer » relance le tirage — cette partie-là n’est pas une liste finie.</p>
-      <div class="toolbar">
+  <section class="sec" id="fonds">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2>Le fonds</h2>
+        <p class="tag" id="count"></p>
+      </div>
+      <p class="sec__lede">Sous le calendrier, la réserve permanente : des formes paramétriques qui écrivent leur propre <code>path</code>, et un jeu de symboles Adinkra. Elles restent dans la cuve — <b>ce sont des dessins, pas des étoffes imprimées</b>. « Régénérer » relance le tirage.</p>
+      <div class="tools">
         <div class="ctl"><label for="q">Chercher</label><input id="q" type="search" placeholder="blob, étoile, akoma…" autocomplete="off"></div>
         <div class="ctl"><label>Rendu</label>
           <div class="seg" id="mode">
@@ -274,32 +339,49 @@
           </div>
         </div>
         <div class="ctl"><label for="w">Trait</label><input id="w" type="range" min="1" max="14" step="0.5" value="6"></div>
-        <div class="ctl"><label for="c">Couleur</label><input id="c" type="color" value="#17140F"></div>
+        <div class="ctl"><label for="c">Couleur</label><input id="c" type="color" value="#EDE4D0"></div>
         <button class="btn" id="reseed" type="button">Régénérer</button>
         <span class="count" id="count2"></span>
       </div>
       <div class="grid" id="grid-geo"></div>
-      <h3 class="sec-head" style="margin-top:56px"><span style="font-family:var(--f-display);font-weight:600;font-size:25px">Symboles Adinkra</span> <span class="n" id="n-adinkra"></span></h3>
+
+      <div class="subhead"><h3>Symboles Adinkra</h3><p class="tag" id="n-adinkra"></p></div>
       <p class="caution"><b>Tracés d’étude, à ne pas diffuser tels quels.</b> Ces symboles akan sont reconstruits géométriquement. Les proportions réelles viennent de tampons gravés dans la calebasse et varient d’un atelier à l’autre ; chaque signe porte un proverbe. Une version publiable demande des vectorisations sourcées et une relecture par des locuteurs twi.</p>
       <div class="grid" id="grid-adinkra"></div>
-    </section>
+    </div>
+  </section>
 
-    <section class="notes">
-      <h2>Le protocole</h2>
-      <dl>
-        <div><dt>Cadence</dt><dd>Un motif par jour pendant 365 jours. Une fois imprimé, un motif est figé : son tracé est enregistré tel quel, jamais régénéré.</dd></div>
-        <div><dt>Contrainte</dt><dd>Chaque motif est une tuile 100 × 100 à raccord invisible. Pas un logo, pas une icône : une surface, utilisable en fond, en textile, en décor animé.</dd></div>
-        <div><dt>Lignée</dt><dd>Le vocabulaire puise dans les traditions graphiques ouest-africaines — registres adinkra, trames bogolan, structures kente — et dans la géométrie générative. Les motifs inventés portent des noms descriptifs ; les signes traditionnels gardent leur nom d’origine et sont signalés comme tels.</dd></div>
-        <div><dt>Sortie</dt><dd>Copie de la tuile seule ou du <code>&lt;pattern&gt;</code> prêt à peindre une surface. Aucune dépendance externe, aucun script tiers.</dd></div>
+  <section class="sec" id="protocole">
+    <div class="wrap">
+      <div class="sec__head"><h2>Le protocole</h2><p class="tag">Quatre règles</p></div>
+      <dl class="proto">
+        <div><dt class="tag tag--brass">Cadence</dt><dd>Un motif par jour pendant 365 jours. Une fois imprimé, un motif est figé : son tracé est enregistré tel quel, jamais régénéré.</dd></div>
+        <div><dt class="tag tag--brass">Contrainte</dt><dd>Chaque motif est une tuile 100 × 100 à raccord invisible. Pas un logo, pas une icône : une surface, utilisable en fond, en textile, en décor animé.</dd></div>
+        <div><dt class="tag tag--brass">Lignée</dt><dd>Le vocabulaire puise dans les traditions graphiques ouest-africaines — registres adinkra, trames bogolan, structures kente. Les motifs inventés portent des noms descriptifs ; les signes traditionnels gardent leur nom d’origine et sont signalés comme tels.</dd></div>
+        <div><dt class="tag tag--brass">Sortie</dt><dd>Copie de la tuile seule ou du <code>&lt;pattern&gt;</code> prêt à peindre une surface. Aucune dépendance externe, aucun script tiers.</dd></div>
       </dl>
-      <p class="colophon">Pièce en cours · <span id="colo"></span></p>
-    </section>
+    </div>
+  </section>
 
-  </div>
 </main>
 
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="logo" href="#">
+      <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="11">
+          <path d="M78 24 A38 38 0 1 0 78 76"/>
+          <path d="M66 38 A20 20 0 1 0 66 62"/>
+        </g>
+      </svg>
+      <span class="logo__word">Calebasse<i>365</i></span>
+    </a>
+    <p class="tag" id="colo"></p>
+    <p class="tag"><a href="https://github.com/iznogoudcr/calebasse-365">Le dépôt</a></p>
+  </div>
+</footer>
 
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
   "use strict";
@@ -329,7 +411,14 @@
 /* === MOTIFS:END =================================================== */
   ];
 
-  /* ---------------- dates ---------------- */
+  /* ── encres ──────────────────────────────────────────────────────
+     Un motif imprimé est toujours noir sur étoffe claire, comme un
+     vrai adinkra. Les formes du fonds, elles, ne sont pas imprimées :
+     elles restent claires sur le noir de la cuve.                    */
+  var ENCRE = '#0A0806';
+  var CRAIE = '#EDE4D0';
+
+  /* ── dates ───────────────────────────────────────────────────── */
   var MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
   function dateOf(day){ return new Date(START[0], START[1], START[2] + (day-1)); }
   function fmt(d){ return d.getDate()+' '+MOIS[d.getMonth()]+' '+d.getFullYear(); }
@@ -340,7 +429,7 @@
     return Math.floor((d0-a)/86400000)+1;
   }
 
-  /* ---------------- svg builders ---------------- */
+  /* ── fabrique de SVG ─────────────────────────────────────────── */
   function groupAttrs(m,color){
     return m.mode==='fill'
       ? 'fill="'+color+'"'
@@ -350,7 +439,7 @@
     var attrs = m.mode==='fill'
       ? 'fill="'+color+'"'
       : 'fill="none" stroke="'+color+'" stroke-width="'+Math.max(m.weight*2.4,9)+'" stroke-linecap="'+(m.cap||'butt')+'"';
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="18" height="18">'
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
          + '<g '+attrs+'>'+m.inner+'</g></svg>';
   }
   function tileSvg(m,color,px){
@@ -358,7 +447,7 @@
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="'+s+'" height="'+s+'">'
          + '<g '+groupAttrs(m,color)+'>'+m.inner+'</g></svg>';
   }
-  function patternSvg(m,color,w,h){
+  function patternSvg(m,color,w,h,par){
     var id='motif-'+pad3(m.day), gid='tuile-'+pad3(m.day), uses='';
     /* Chaque tuile d'un <pattern> rogne son propre contenu : un trait oblique
        qui touche un bord y perd un coin. On place donc la tuile et ses huit
@@ -367,38 +456,46 @@
       for(var dx=-100;dx<=100;dx+=100)
         uses+='<use href="#'+gid+'" xlink:href="#'+gid+'" x="'+dx+'" y="'+dy+'"/>';
     return '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
-         + 'viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'">'
+         + 'viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'"'
+         + (par?' preserveAspectRatio="'+par+'"':'')+'>'
          + '<defs><g id="'+gid+'" '+groupAttrs(m,color)+'>'+m.inner+'</g>'
          + '<pattern id="'+id+'" width="100" height="100" patternUnits="userSpaceOnUse">'+uses+'</pattern></defs>'
          + '<rect width="'+w+'" height="'+h+'" fill="url(#'+id+')"/></svg>';
   }
-  function ink(){ return getComputedStyle(document.documentElement).getPropertyValue('--shape').trim() || '#17140F'; }
 
-  /* ---------------- hero ---------------- */
+  /* ── héros ───────────────────────────────────────────────────── */
   var current = null;
+  var $ = function(id){ return document.getElementById(id); };
+
   function showMotif(m){
     current = m;
-    var d = dateOf(m.day), color = ink();
-    document.getElementById('plate').innerHTML = patternSvg(m,color,200,200);
-    document.getElementById('plate').setAttribute('data-no','N° '+pad3(m.day)+' · raccord 2 × 2');
-    document.getElementById('daynum').innerHTML = pad3(m.day)+'<em> / 365</em>';
-    document.getElementById('mtitle').textContent = m.name;
-    document.getElementById('mmeta').innerHTML =
-      '<span>'+fmt(d)+'</span><b>'+m.family+'</b><span>'+(m.mode==='fill'?'aplat':'trait '+m.weight)+'</span>';
-    document.getElementById('mnote').textContent = m.note;
-    document.getElementById('band').innerHTML = patternSvg(m,color,1400,190);
-    document.getElementById('band-l').textContent = 'Motif '+pad3(m.day)+' — '+m.name;
+    var d = dateOf(m.day);
+    /* viewBox serré = tuiles grandes : sur l'étoffe du héros le motif doit se
+       lire comme un dessin, pas comme une texture. La bande est un cran plus
+       dense, elle joue le rouleau de tissu. */
+    $('cloth').innerHTML  = patternSvg(m, ENCRE, 400, 460, 'xMidYMid slice');
+    $('bolt').innerHTML   = patternSvg(m, ENCRE, 760, 130, 'xMidYMid slice');
+    $('daybig').textContent = pad3(m.day);
+    $('daytot').textContent = '/ 365 · ' + fmt(d);
+    $('mtitle').textContent = m.name;
+    $('mmeta').innerHTML =
+        '<p class="tag tag--brass">' + m.family + '</p>'
+      + '<p class="tag">' + (m.mode==='fill' ? 'aplat' : 'trait ' + m.weight) + '</p>'
+      + '<p class="tag">tuile 100 × 100</p>';
+    $('mnote').textContent = m.note;
+    $('boltcap').textContent = 'Motif ' + pad3(m.day) + ' — ' + m.name;
   }
 
-  /* ---------------- year cloth ---------------- */
+  /* ── étoffe de l'année ───────────────────────────────────────── */
   function buildYear(){
-    var host=document.getElementById('year'); host.innerHTML='';
+    var host=$('year'); host.innerHTML='';
     var byDay={}; MOTIFS.forEach(function(m){ byDay[m.day]=m; });
     var first=new Date(START[0],START[1],START[2]);
     var offset=(first.getDay()+6)%7;              /* lundi = 0 */
-    var ti=todayIndex(), color=ink();
+    var ti=todayIndex();
+    var frag=document.createDocumentFragment();
     for(var p=0;p<offset;p++){
-      var s=document.createElement('span'); s.className='cell pad'; s.setAttribute('aria-hidden','true'); host.appendChild(s);
+      var s=document.createElement('span'); s.className='cell pad'; s.setAttribute('aria-hidden','true'); frag.appendChild(s);
     }
     for(var i=1;i<=TOTAL;i++){
       var m=byDay[i], d=dateOf(i);
@@ -413,26 +510,27 @@
           showMotif(mm); window.scrollTo({top:0,behavior:'smooth'});
         }); })(m);
       } else {
-        el.innerHTML='<span class="pip"></span>';
-        el.title='Jour '+pad3(i)+' · '+fmt(d)+' — à venir';
+        el.title='Jour '+pad3(i)+' · '+fmt(d)+' — dans la cuve';
       }
-      host.appendChild(el);
+      frag.appendChild(el);
     }
+    host.appendChild(frag);
     var np=MOTIFS.length;
-    document.getElementById('n-year').textContent = np+(np>1?' imprimés':' imprimé')+' · '+(TOTAL-np)+' à venir';
-    document.getElementById('ledger').textContent = 'Registre '+pad3(MOTIFS.length)+' / 365';
-    document.getElementById('colo').textContent = np+(np>1?' motifs imprimés':' motif imprimé')+' sur 365';
+    $('n-year').textContent = np+(np>1?' imprimés':' imprimé')+' · '+(TOTAL-np)+' dans la cuve';
+    $('ledger').textContent = 'Registre '+pad3(np)+' / 365';
+    $('bar').style.width = (np/TOTAL*100).toFixed(2)+'%';
+    $('colo').textContent = np+(np>1?' motifs imprimés':' motif imprimé')+' sur 365';
   }
 
-  /* ---------------- toast + copy ---------------- */
-  var toastEl=document.getElementById('toast'), tTimer=null;
+  /* ── copie ───────────────────────────────────────────────────── */
+  var toastEl=$('toast'), tTimer=null;
   function toast(msg){
     toastEl.textContent=msg; toastEl.setAttribute('data-on','1');
-    clearTimeout(tTimer); tTimer=setTimeout(function(){toastEl.removeAttribute('data-on');},1800);
+    clearTimeout(tTimer); tTimer=setTimeout(function(){toastEl.removeAttribute('data-on');},1900);
   }
   function copyText(code,label,el){
     var done=function(){
-      if(el){ el.setAttribute('data-copied','1'); setTimeout(function(){el.removeAttribute('data-copied');},1200); }
+      if(el){ el.setAttribute('data-copied','1'); setTimeout(function(){el.removeAttribute('data-copied');},1100); }
       toast(label);
     };
     if(navigator.clipboard&&navigator.clipboard.writeText){
@@ -446,14 +544,14 @@
     try{ document.execCommand('copy'); done(); }catch(e){ toast('Copie refusée par le navigateur'); }
     document.body.removeChild(ta);
   }
-  document.getElementById('copy-tile').addEventListener('click',function(){
-    copyText(tileSvg(current,ink(),100),'Tuile copiée · '+current.name);
+  $('copy-tile').addEventListener('click',function(){
+    copyText(tileSvg(current,ENCRE,100),'Tuile copiée · '+current.name);
   });
-  document.getElementById('copy-pattern').addEventListener('click',function(){
-    copyText(patternSvg(current,ink(),800,800),'Motif répété copié · '+current.name);
+  $('copy-pattern').addEventListener('click',function(){
+    copyText(patternSvg(current,ENCRE,800,800),'Motif répété copié · '+current.name);
   });
 
-  /* ================= LE FONDS ================= */
+/* ── le fonds : formes paramétriques + symboles Adinkra ────────── */
   var N=function(v){return Math.round(v*100)/100;};
   function rng(seed){var s=(seed>>>0)||1;return function(){s^=s<<13;s>>>=0;s^=s>>>17;s^=s<<5;s>>>=0;return s/4294967296;};}
   function pt(p){return N(p[0])+' '+N(p[1]);}
@@ -656,7 +754,7 @@
   ];
 
   var fs={seed:1,mode:'auto',weight:6,color:null,q:''};
-  function fsColor(){return fs.color||ink();}
+  function fsColor(){return fs.color||CRAIE;}
   function fsSvg(item,color){
     var raw=item.gen(fs.seed);
     if(raw.charAt(0)!=='<')raw='<path d="'+raw+'"/>';
@@ -704,20 +802,14 @@
     });
   });
 
-  /* ---------------- init ---------------- */
-  try{
-    var i0=ink();
-    if(/^#[0-9a-f]{6}$/i.test(i0))document.getElementById('c').value=i0;
-  }catch(e){}
-
-  var ti=todayIndex();
-  var latest=MOTIFS[MOTIFS.length-1];
-  for(var k=0;k<MOTIFS.length;k++) if(MOTIFS[k].day===ti) latest=MOTIFS[k];
+  /* ── mise en route ───────────────────────────────────────────── */
+  var ti = todayIndex();
+  var latest = MOTIFS[MOTIFS.length-1];
+  for(var k=0;k<MOTIFS.length;k++) if(MOTIFS[k].day===ti) latest = MOTIFS[k];
   showMotif(latest);
   buildYear();
   renderFonds();
 })();
 </script>
-
 </body>
 </html>

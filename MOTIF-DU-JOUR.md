@@ -36,9 +36,9 @@ est automatique : un commit poussé sur `main` met la plateforme en ligne.
      et du tracé, tuile dans ses bornes. **Sortie non nulle = ne pas commiter.**
    - `python3 -m http.server 8742` puis charger la page : aucune erreur console,
      le compteur affiche le bon nombre de motifs imprimés.
-   - Regarder l'aperçu 2 × 2 en haut de page : le dessin doit se poursuivre
-     d'une tuile à l'autre sans rupture. C'est le seul contrôle que la machine
-     ne fait pas à ta place.
+   - Regarder l'étoffe du héros et la bande qui la suit : le dessin doit se
+     poursuivre d'une tuile à l'autre sans rupture. C'est le seul contrôle que
+     la machine ne fait pas à ta place.
 6. **Commiter et pousser** sur `main`, un commit par exécution :
    `Motif 007 — Nom du motif` (ou `Motifs 007-009 — rattrapage` si plusieurs).
    Le déploiement suit tout seul.
@@ -79,6 +79,13 @@ adinkra, trames bogolan, structures kente, scarifications, wax.
   la note, et n'est publié que si le tracé est vérifiable. Dans le doute :
   inventer et nommer en français.
 - Ne jamais attribuer un sens ou un proverbe à un motif inventé.
+
+## Ce à quoi tu ne touches pas
+
+L'identité visuelle est fixée : palette, polices, logotype, mise en page. Ta
+seule écriture dans `index.html` est l'ajout d'une entrée au tableau `MOTIFS`.
+Ne modifie ni le CSS, ni le balisage, ni les fichiers de `fonts/`. Si un motif
+te semble mal rendu, c'est le motif qu'il faut corriger, pas la feuille de style.
 
 ## Fin de série
 

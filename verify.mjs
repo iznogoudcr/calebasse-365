@@ -8,7 +8,7 @@
  * rognés d'un côté sont redessinés par la copie d'en face, donc le raccord
  * géométrique est acquis par construction. Ce script vérifie ce qui peut l'être
  * mécaniquement — structure, numérotation, unicité, tuile bien dans ses bornes.
- * La continuité du dessin, elle, se juge à l'œil sur l'aperçu 2 × 2.
+ * La continuité du dessin, elle, se juge à l'œil sur l'étoffe du héros.
  */
 import { readFileSync } from 'node:fs';
 
@@ -160,4 +160,4 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(`✓ registre valide — ${n} motif${n > 1 ? 's' : ''} sur 365${warnings.length ? `, ${warnings.length} avertissement(s)` : ''}.`);
-console.log("  Reste à juger à l'œil : la continuité du dessin sur l'aperçu 2 × 2 en haut de page.");
+console.log("  Reste à juger à l'œil : la continuité du dessin sur l'étoffe en haut de page.");
