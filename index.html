@@ -1,0 +1,698 @@
+<title>Calebasse 365</title>
+<style>
+  :root{
+    --cloth:#CBC2AE; --cloth-2:#D9D2C1; --panel:#E6E1D3; --panel-2:#DCD5C4;
+    --print:#17140F; --print-2:#433E33; --muted:#7C7364;
+    --rule:#B2A992; --rule-soft:#C3BAA5;
+    --brass:#856512; --kobene:#A2401F;
+    --shape:#17140F;
+    --f-display:Optima,Candara,"Gill Sans","Gill Sans MT","Trebuchet MS",sans-serif;
+    --f-body:"Iowan Old Style",Charter,Georgia,"Times New Roman",serif;
+    --f-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --cloth:#100E0B; --cloth-2:#16130F; --panel:#1B1712; --panel-2:#221D17;
+      --print:#F0E9DA; --print-2:#C3BBA9; --muted:#8A8072;
+      --rule:#2F2A22; --rule-soft:#241F19;
+      --brass:#C9A227; --kobene:#D06340;
+      --shape:#F0E9DA;
+    }
+  }
+  :root[data-theme="dark"]{
+    --cloth:#100E0B; --cloth-2:#16130F; --panel:#1B1712; --panel-2:#221D17;
+    --print:#F0E9DA; --print-2:#C3BBA9; --muted:#8A8072;
+    --rule:#2F2A22; --rule-soft:#241F19;
+    --brass:#C9A227; --kobene:#D06340;
+    --shape:#F0E9DA;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--cloth);color:var(--print);
+    font-family:var(--f-body);font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+  @media (max-width:600px){.wrap{padding:0 18px}}
+
+  .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+  .kicker{
+    font-family:var(--f-mono);font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--brass);margin:0;
+  }
+  :is(button,a,input,[tabindex]):focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+
+  /* ============ masthead ============ */
+  .top{border-bottom:1px solid var(--rule)}
+  .top .wrap{display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:20px 28px}
+  .mark{
+    font-family:var(--f-display);font-weight:600;font-size:19px;
+    letter-spacing:.02em;margin:0;
+  }
+  .mark span{color:var(--brass)}
+  .ledger{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+
+  /* ============ hero ============ */
+  .hero{padding:56px 0 0;overflow:hidden}
+  .hero-grid{
+    display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);
+    gap:56px;align-items:start;
+  }
+  @media (max-width:840px){.hero-grid{grid-template-columns:1fr;gap:34px}}
+
+  .plate{
+    position:relative;background:var(--panel);border:1px solid var(--rule);
+    padding:26px;aspect-ratio:1;display:grid;place-items:center;
+    animation:rise .7s cubic-bezier(.2,.7,.3,1) both;
+  }
+  .plate svg{width:100%;height:auto;display:block}
+  .plate::after{
+    content:attr(data-no);position:absolute;bottom:9px;right:12px;
+    font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;color:var(--muted);
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .daynum{
+    font-family:var(--f-display);font-weight:600;
+    font-size:clamp(58px,11vw,112px);line-height:.86;letter-spacing:-.03em;
+    margin:0 0 6px;font-variant-numeric:tabular-nums;
+  }
+  .daynum em{font-style:normal;color:var(--muted);opacity:.55}
+  h1{
+    font-family:var(--f-display);font-weight:600;
+    font-size:clamp(27px,4vw,42px);line-height:1.05;letter-spacing:-.015em;
+    margin:14px 0 12px;text-wrap:balance;
+  }
+  .meta{
+    display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 20px;
+    font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);
+  }
+  .meta b{color:var(--brass);font-weight:400}
+  .note{margin:0 0 26px;max-width:54ch;color:var(--print-2);font-size:16.5px}
+  .acts{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{
+    font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    padding:10px 15px;border:1px solid var(--rule);background:transparent;color:var(--print);
+    cursor:pointer;transition:background .15s ease,border-color .15s ease,color .15s ease;
+  }
+  .btn:hover{border-color:var(--brass);color:var(--brass)}
+  .btn--solid{background:var(--print);color:var(--cloth);border-color:var(--print)}
+  .btn--solid:hover{background:var(--brass);border-color:var(--brass);color:var(--cloth)}
+
+  /* ============ cloth band ============ */
+  .band{
+    margin-top:56px;height:190px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+    overflow:hidden;position:relative;background:var(--cloth-2);
+    animation:press .95s cubic-bezier(.16,.84,.28,1) both .18s;
+  }
+  .band svg{width:100%;height:100%;display:block}
+  @keyframes press{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+  .band-cap{
+    display:flex;justify-content:space-between;gap:16px;padding:9px 0 0;
+    font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+
+  /* ============ sections ============ */
+  section{padding:74px 0 0}
+  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+  .sec-head h2{font-family:var(--f-display);font-weight:600;font-size:25px;letter-spacing:-.01em;margin:0}
+  .sec-head .n{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+  .sec-note{margin:0 0 30px;max-width:64ch;color:var(--muted);font-size:14.5px}
+  .sec-note code{font-family:var(--f-mono);font-size:.85em;color:var(--brass)}
+
+  /* ============ year cloth ============ */
+  .year-scroll{overflow-x:auto;padding-bottom:6px}
+  .year{
+    display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,20px);
+    gap:3px;min-width:min-content;
+  }
+  .cell{
+    width:20px;height:20px;padding:0;border:0;background:var(--rule-soft);
+    display:grid;place-items:center;cursor:default;position:relative;
+  }
+  .cell.pad{background:transparent}
+  .cell .pip{width:2px;height:2px;background:var(--rule);display:block}
+  .cell.done{background:var(--panel-2);cursor:pointer;color:var(--brass);transition:background .15s ease,color .15s ease}
+  .cell.done svg{width:18px;height:18px;display:block}
+  .cell.done:hover,.cell.done:focus-visible{background:var(--brass);color:var(--cloth)}
+  .cell.today{outline:1px solid var(--kobene);outline-offset:1px}
+  .year-cap{
+    display:flex;justify-content:space-between;gap:16px;margin-top:14px;
+    font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:22px;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .legend i{display:inline-block;width:9px;height:9px;margin-right:7px;vertical-align:-1px}
+
+  /* ============ fonds ============ */
+  .toolbar{
+    display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;
+    padding:12px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-bottom:26px;
+  }
+  .ctl{display:flex;align-items:center;gap:8px}
+  .ctl > label{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  input[type="search"]{
+    font-family:var(--f-mono);font-size:12px;color:var(--print);background:var(--panel);
+    border:1px solid var(--rule);padding:7px 10px;width:172px;border-radius:0;
+  }
+  input[type="search"]::placeholder{color:var(--muted)}
+  input[type="range"]{width:84px;accent-color:var(--brass)}
+  input[type="color"]{width:28px;height:25px;padding:0;border:1px solid var(--rule);background:var(--panel);cursor:pointer}
+  .seg{display:flex;border:1px solid var(--rule)}
+  .seg button{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;padding:6px 11px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--print);color:var(--cloth)}
+  .count{margin-left:auto;font-family:var(--f-mono);font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+  .grid{display:grid;gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft);
+    grid-template-columns:repeat(auto-fill,minmax(146px,1fr))}
+  .tile{
+    background:var(--panel);border:0;cursor:pointer;color:inherit;font:inherit;text-align:left;
+    padding:0;position:relative;display:flex;flex-direction:column;transition:background .15s ease;
+  }
+  .tile:hover{background:var(--panel-2)}
+  .tile__art{display:grid;place-items:center;padding:22px 18px 12px}
+  .tile__art svg{width:100%;height:auto;max-width:84px;display:block}
+  .tile__meta{padding:0 12px 13px;display:flex;flex-direction:column;gap:2px;min-height:44px}
+  .tile__name{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--print)}
+  .tile__gloss{font-size:12.5px;line-height:1.35;color:var(--muted)}
+  .tile[data-copied="1"] .tile__name{color:var(--brass)}
+  .tile__tag{position:absolute;top:8px;right:9px;font-family:var(--f-mono);font-size:9px;letter-spacing:.1em;color:var(--muted);opacity:0;transition:opacity .15s ease}
+  .tile:hover .tile__tag,.tile:focus-visible .tile__tag{opacity:1}
+
+  .caution{border-left:2px solid var(--kobene);padding:12px 0 12px 16px;margin:0 0 28px;max-width:66ch;font-size:14.5px;color:var(--print-2)}
+
+  /* ============ notes ============ */
+  .notes{padding:78px 0 96px;margin-top:78px;border-top:1px solid var(--rule)}
+  .notes h2{font-family:var(--f-display);font-weight:600;font-size:22px;margin:0 0 24px}
+  .notes dl{margin:0;display:grid;gap:20px;max-width:70ch}
+  .notes dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:4px}
+  .notes dd{margin:0;color:var(--print-2);font-size:15px}
+  .colophon{margin-top:52px;font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+    background:var(--print);color:var(--cloth);font-family:var(--f-mono);font-size:10.5px;
+    letter-spacing:.1em;text-transform:uppercase;padding:11px 17px;
+    opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:60;
+  }
+  .toast[data-on="1"]{opacity:1;transform:translate(-50%,0)}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <p class="mark">Calebasse <span>365</span></p>
+    <p class="ledger" id="ledger"></p>
+  </div>
+</header>
+
+<main>
+
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="plate" id="plate" data-no=""></div>
+        <div>
+          <p class="kicker">Motif du jour</p>
+          <p class="daynum" id="daynum"></p>
+          <h1 id="mtitle"></h1>
+          <p class="meta" id="mmeta"></p>
+          <p class="note" id="mnote"></p>
+          <div class="acts">
+            <button class="btn btn--solid" id="copy-tile" type="button">Copier la tuile</button>
+            <button class="btn" id="copy-pattern" type="button">Copier le motif répété</button>
+            <a class="btn" href="#etoffe">Voir l’étoffe</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="band" id="band"></div>
+    <div class="wrap"><p class="band-cap"><span id="band-l"></span><span>Tuile 100 × 100 · raccord sans couture</span></p></div>
+  </div>
+
+  <div class="wrap">
+
+    <section id="etoffe">
+      <div class="sec-head"><h2>L’étoffe de l’année</h2><span class="n" id="n-year"></span></div>
+      <p class="sec-note">Un motif imprimé par jour, du 19 août 2026 au 18 août 2027. Chaque colonne est une semaine, chaque ligne un jour de la semaine — la pièce se tisse en public et le vide fait partie du dessin. Cliquez une case imprimée pour la charger en haut de page.</p>
+      <div class="year-scroll"><div class="year" id="year"></div></div>
+      <p class="year-cap"><span>août 2026</span><span>août 2027</span></p>
+      <p class="legend">
+        <span><i style="background:var(--panel-2)"></i><span style="color:var(--brass)">Imprimé</span></span>
+        <span><i style="background:var(--rule-soft)"></i>À venir</span>
+        <span><i style="background:transparent;outline:1px solid var(--kobene)"></i>Aujourd’hui</span>
+      </p>
+    </section>
+
+    <section id="fonds">
+      <div class="sec-head"><h2>Le fonds</h2><span class="n" id="count"></span></div>
+      <p class="sec-note">Sous le calendrier, la réserve permanente : des formes paramétriques qui écrivent leur propre <code>path</code>, et un jeu de symboles Adinkra. « Régénérer » relance le tirage — cette partie-là n’est pas une liste finie.</p>
+      <div class="toolbar">
+        <div class="ctl"><label for="q">Chercher</label><input id="q" type="search" placeholder="blob, étoile, akoma…" autocomplete="off"></div>
+        <div class="ctl"><label>Rendu</label>
+          <div class="seg" id="mode">
+            <button type="button" data-v="auto" aria-pressed="true">Auto</button>
+            <button type="button" data-v="fill" aria-pressed="false">Plein</button>
+            <button type="button" data-v="stroke" aria-pressed="false">Contour</button>
+          </div>
+        </div>
+        <div class="ctl"><label for="w">Trait</label><input id="w" type="range" min="1" max="14" step="0.5" value="6"></div>
+        <div class="ctl"><label for="c">Couleur</label><input id="c" type="color" value="#17140F"></div>
+        <button class="btn" id="reseed" type="button">Régénérer</button>
+        <span class="count" id="count2"></span>
+      </div>
+      <div class="grid" id="grid-geo"></div>
+      <h3 class="sec-head" style="margin-top:56px"><span style="font-family:var(--f-display);font-weight:600;font-size:25px">Symboles Adinkra</span> <span class="n" id="n-adinkra"></span></h3>
+      <p class="caution"><b>Tracés d’étude, à ne pas diffuser tels quels.</b> Ces symboles akan sont reconstruits géométriquement. Les proportions réelles viennent de tampons gravés dans la calebasse et varient d’un atelier à l’autre ; chaque signe porte un proverbe. Une version publiable demande des vectorisations sourcées et une relecture par des locuteurs twi.</p>
+      <div class="grid" id="grid-adinkra"></div>
+    </section>
+
+    <section class="notes">
+      <h2>Le protocole</h2>
+      <dl>
+        <div><dt>Cadence</dt><dd>Un motif par jour pendant 365 jours. Une fois imprimé, un motif est figé : son tracé est enregistré tel quel, jamais régénéré.</dd></div>
+        <div><dt>Contrainte</dt><dd>Chaque motif est une tuile 100 × 100 à raccord invisible. Pas un logo, pas une icône : une surface, utilisable en fond, en textile, en décor animé.</dd></div>
+        <div><dt>Lignée</dt><dd>Le vocabulaire puise dans les traditions graphiques ouest-africaines — registres adinkra, trames bogolan, structures kente — et dans la géométrie générative. Les motifs inventés portent des noms descriptifs ; les signes traditionnels gardent leur nom d’origine et sont signalés comme tels.</dd></div>
+        <div><dt>Sortie</dt><dd>Copie de la tuile seule ou du <code>&lt;pattern&gt;</code> prêt à peindre une surface. Aucune dépendance externe, aucun script tiers.</dd></div>
+      </dl>
+      <p class="colophon">Pièce en cours · <span id="colo"></span></p>
+    </section>
+
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var START = [2026,7,19];   /* 19 août 2026 — mois 0-indexé */
+  var TOTAL = 365;
+
+/* === MOTIFS:START =================================================
+   Registre append-only. Une entrée par jour, ajoutée en fin de liste.
+   Ne jamais modifier une entrée déjà publiée.
+   Champs : day, name, family, note, mode ('stroke'|'fill'), weight, inner
+=================================================================== */
+  var MOTIFS = [
+    {
+      day:1,
+      name:'Peigne double',
+      family:'Registres',
+      note:'Le peigne est l’outil qui divise le pagne adinkra en cases avant que le tampon ne touche l’étoffe. Ici l’outil devient le sujet : deux lignes de partage, leurs dents opposées, et une frise en dents de scie qui referme le registre. La tuile se raccorde sur ses quatre bords.',
+      mode:'stroke',
+      weight:4.5,
+      inner:'<path d="M0 0 H100"/><path d="M0 50 H100"/>'
+           +'<path d="M0 0 V13"/><path d="M12.5 0 V13"/><path d="M25 0 V13"/><path d="M37.5 0 V13"/><path d="M50 0 V13"/><path d="M62.5 0 V13"/><path d="M75 0 V13"/><path d="M87.5 0 V13"/><path d="M100 0 V13"/>'
+           +'<path d="M6.25 50 V37"/><path d="M18.75 50 V37"/><path d="M31.25 50 V37"/><path d="M43.75 50 V37"/><path d="M56.25 50 V37"/><path d="M68.75 50 V37"/><path d="M81.25 50 V37"/><path d="M93.75 50 V37"/>'
+           +'<path d="M0 88 L12.5 64 L25 88 L37.5 64 L50 88 L62.5 64 L75 88 L87.5 64 L100 88"/>'
+    }
+/* === MOTIFS:END =================================================== */
+  ];
+
+  /* ---------------- dates ---------------- */
+  var MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  function dateOf(day){ return new Date(START[0], START[1], START[2] + (day-1)); }
+  function fmt(d){ return d.getDate()+' '+MOIS[d.getMonth()]+' '+d.getFullYear(); }
+  function pad3(n){ return ('00'+n).slice(-3); }
+  function todayIndex(){
+    var now=new Date(), a=new Date(START[0],START[1],START[2]);
+    var d0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    return Math.floor((d0-a)/86400000)+1;
+  }
+
+  /* ---------------- svg builders ---------------- */
+  function groupAttrs(m,color){
+    return m.mode==='fill'
+      ? 'fill="'+color+'"'
+      : 'fill="none" stroke="'+color+'" stroke-width="'+m.weight+'" stroke-linecap="square" stroke-linejoin="miter"';
+  }
+  function miniSvg(m,color){
+    var attrs = m.mode==='fill'
+      ? 'fill="'+color+'"'
+      : 'fill="none" stroke="'+color+'" stroke-width="'+Math.max(m.weight*2.4,9)+'" stroke-linecap="square"';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="18" height="18">'
+         + '<g '+attrs+'>'+m.inner+'</g></svg>';
+  }
+  function tileSvg(m,color,px){
+    var s = px||100;
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="'+s+'" height="'+s+'">'
+         + '<g '+groupAttrs(m,color)+'>'+m.inner+'</g></svg>';
+  }
+  function patternSvg(m,color,w,h){
+    var id='motif-'+pad3(m.day);
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'">'
+         + '<defs><pattern id="'+id+'" width="100" height="100" patternUnits="userSpaceOnUse">'
+         + '<g '+groupAttrs(m,color)+'>'+m.inner+'</g></pattern></defs>'
+         + '<rect width="'+w+'" height="'+h+'" fill="url(#'+id+')"/></svg>';
+  }
+  function ink(){ return getComputedStyle(document.documentElement).getPropertyValue('--shape').trim() || '#17140F'; }
+
+  /* ---------------- hero ---------------- */
+  var current = null;
+  function showMotif(m){
+    current = m;
+    var d = dateOf(m.day), color = ink();
+    document.getElementById('plate').innerHTML = patternSvg(m,color,200,200);
+    document.getElementById('plate').setAttribute('data-no','N° '+pad3(m.day)+' · raccord 2 × 2');
+    document.getElementById('daynum').innerHTML = pad3(m.day)+'<em> / 365</em>';
+    document.getElementById('mtitle').textContent = m.name;
+    document.getElementById('mmeta').innerHTML =
+      '<span>'+fmt(d)+'</span><b>'+m.family+'</b><span>'+(m.mode==='fill'?'aplat':'trait '+m.weight)+'</span>';
+    document.getElementById('mnote').textContent = m.note;
+    document.getElementById('band').innerHTML = patternSvg(m,color,1400,190);
+    document.getElementById('band-l').textContent = 'Motif '+pad3(m.day)+' — '+m.name;
+  }
+
+  /* ---------------- year cloth ---------------- */
+  function buildYear(){
+    var host=document.getElementById('year'); host.innerHTML='';
+    var byDay={}; MOTIFS.forEach(function(m){ byDay[m.day]=m; });
+    var first=new Date(START[0],START[1],START[2]);
+    var offset=(first.getDay()+6)%7;              /* lundi = 0 */
+    var ti=todayIndex(), color=ink();
+    for(var p=0;p<offset;p++){
+      var s=document.createElement('span'); s.className='cell pad'; s.setAttribute('aria-hidden','true'); host.appendChild(s);
+    }
+    for(var i=1;i<=TOTAL;i++){
+      var m=byDay[i], d=dateOf(i);
+      var el=document.createElement(m?'button':'span');
+      el.className='cell'+(m?' done':'')+(i===ti?' today':'');
+      if(m){
+        el.type='button';
+        el.innerHTML=miniSvg(m,'currentColor');
+        el.setAttribute('aria-label','Jour '+i+' — '+m.name+', '+fmt(d));
+        el.title='Jour '+pad3(i)+' · '+m.name+' · '+fmt(d);
+        (function(mm){ el.addEventListener('click',function(){
+          showMotif(mm); window.scrollTo({top:0,behavior:'smooth'});
+        }); })(m);
+      } else {
+        el.innerHTML='<span class="pip"></span>';
+        el.title='Jour '+pad3(i)+' · '+fmt(d)+' — à venir';
+      }
+      host.appendChild(el);
+    }
+    var np=MOTIFS.length;
+    document.getElementById('n-year').textContent = np+(np>1?' imprimés':' imprimé')+' · '+(TOTAL-np)+' à venir';
+    document.getElementById('ledger').textContent = 'Registre '+pad3(MOTIFS.length)+' / 365';
+    document.getElementById('colo').textContent = np+(np>1?' motifs imprimés':' motif imprimé')+' sur 365';
+  }
+
+  /* ---------------- toast + copy ---------------- */
+  var toastEl=document.getElementById('toast'), tTimer=null;
+  function toast(msg){
+    toastEl.textContent=msg; toastEl.setAttribute('data-on','1');
+    clearTimeout(tTimer); tTimer=setTimeout(function(){toastEl.removeAttribute('data-on');},1800);
+  }
+  function copyText(code,label,el){
+    var done=function(){
+      if(el){ el.setAttribute('data-copied','1'); setTimeout(function(){el.removeAttribute('data-copied');},1200); }
+      toast(label);
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(code).then(done,function(){fb(code,done);});
+    } else fb(code,done);
+  }
+  function fb(code,done){
+    var ta=document.createElement('textarea');
+    ta.value=code; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(); }catch(e){ toast('Copie refusée par le navigateur'); }
+    document.body.removeChild(ta);
+  }
+  document.getElementById('copy-tile').addEventListener('click',function(){
+    copyText(tileSvg(current,ink(),100),'Tuile copiée · '+current.name);
+  });
+  document.getElementById('copy-pattern').addEventListener('click',function(){
+    copyText(patternSvg(current,ink(),800,800),'Motif répété copié · '+current.name);
+  });
+
+  /* ================= LE FONDS ================= */
+  var N=function(v){return Math.round(v*100)/100;};
+  function rng(seed){var s=(seed>>>0)||1;return function(){s^=s<<13;s>>>=0;s^=s>>>17;s^=s<<5;s>>>=0;return s/4294967296;};}
+  function pt(p){return N(p[0])+' '+N(p[1]);}
+  function smoothClosed(pts){
+    var n=pts.length,d='M'+pt(pts[0]);
+    for(var i=0;i<n;i++){
+      var p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
+      d+='C'+pt([p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6])+','
+        +pt([p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6])+','+pt(p2);
+    }
+    return d+'Z';
+  }
+  function poly(pts){return 'M'+pts.map(pt).join('L')+'Z';}
+  function roundPoly(pts,r){
+    var n=pts.length,d='';
+    for(var i=0;i<n;i++){
+      var prev=pts[(i-1+n)%n],cur=pts[i],next=pts[(i+1)%n];
+      var v1=[prev[0]-cur[0],prev[1]-cur[1]],v2=[next[0]-cur[0],next[1]-cur[1]];
+      var l1=Math.hypot(v1[0],v1[1])||1,l2=Math.hypot(v2[0],v2[1])||1;
+      var rr=Math.min(r,l1/2,l2/2);
+      d+=(i===0?'M':'L')+pt([cur[0]+v1[0]/l1*rr,cur[1]+v1[1]/l1*rr])
+        +'Q'+pt(cur)+','+pt([cur[0]+v2[0]/l2*rr,cur[1]+v2[1]/l2*rr]);
+    }
+    return d+'Z';
+  }
+  function ring(pts){return 'M'+pts.map(pt).join('L');}
+  function spiral(cx,cy,r0,r1,a0,turns,dir){
+    var out=[];
+    for(var i=0;i<=64;i++){var t=i/64,a=a0+dir*t*turns*Math.PI*2,r=r0+(r1-r0)*t;out.push([cx+Math.cos(a)*r,cy+Math.sin(a)*r]);}
+    return ring(out);
+  }
+  function rot(inner,deg){return '<g transform="rotate('+deg+' 50 50)">'+inner+'</g>';}
+
+  function blob(seed,n,irr){
+    var R=rng(seed*7+n),pts=[];
+    for(var i=0;i<n;i++){var a=(i/n)*Math.PI*2-Math.PI/2,r=42*(1-irr/2+R()*irr);pts.push([50+Math.cos(a)*r,50+Math.sin(a)*r]);}
+    return '<path d="'+smoothClosed(pts)+'"/>';
+  }
+  function flower(seed,n,depth){
+    var R=rng(seed*13+n),j=(R()*.10)-.05,pts=[],steps=n*10;
+    for(var i=0;i<steps;i++){var a=(i/steps)*Math.PI*2,r=42*(1-depth/2+(depth/2)*Math.cos(a*n)+j*Math.cos(a*n*2));pts.push([50+Math.cos(a)*r,50+Math.sin(a)*r]);}
+    return '<path d="'+poly(pts)+'"/>';
+  }
+  function star(n,inner,round){
+    var pts=[];
+    for(var i=0;i<n*2;i++){var a=(i/(n*2))*Math.PI*2-Math.PI/2,r=(i%2===0)?42:42*inner;pts.push([50+Math.cos(a)*r,50+Math.sin(a)*r]);}
+    return '<path d="'+(round?roundPoly(pts,round):poly(pts))+'"/>';
+  }
+  function sun(n){
+    var out='<circle cx="50" cy="50" r="18"/>';
+    for(var i=0;i<n;i++){var a=(i/n)*Math.PI*2;out+='<path d="M'+N(50+Math.cos(a)*27)+' '+N(50+Math.sin(a)*27)+'L'+N(50+Math.cos(a)*44)+' '+N(50+Math.sin(a)*44)+'"/>';}
+    return out;
+  }
+  function arch(k){var rx=40,ry=40*k,sp=10+ry;return '<path d="M10 92 L10 '+N(sp)+' A'+rx+' '+N(ry)+' 0 0 1 90 '+N(sp)+' L90 92 Z"/>';}
+  function superellipse(e){
+    var pts=[];
+    for(var i=0;i<120;i++){var t=(i/120)*Math.PI*2,ct=Math.cos(t),st=Math.sin(t);
+      pts.push([50+Math.sign(ct)*Math.pow(Math.abs(ct),2/e)*40,50+Math.sign(st)*Math.pow(Math.abs(st),2/e)*40]);}
+    return '<path d="'+poly(pts)+'"/>';
+  }
+  function ngon(n,r){
+    var pts=[];
+    for(var i=0;i<n;i++){var a=(i/n)*Math.PI*2-Math.PI/2;pts.push([50+Math.cos(a)*42,50+Math.sin(a)*42]);}
+    return '<path d="'+roundPoly(pts,r)+'"/>';
+  }
+  function wave(seed,cy,amp){
+    var R=rng(seed*3+cy),ph=R()*Math.PI*2,out='';
+    for(var row=0;row<3;row++){
+      var pts=[];
+      for(var i=0;i<=48;i++)pts.push([8+(i/48)*84,30+row*20+Math.sin((i/48)*cy*Math.PI*2+ph)*amp*0.5]);
+      out+='<path d="'+ring(pts)+'"/>';
+    }
+    return out;
+  }
+  function zig(n,amp){
+    var pts=[];
+    for(var i=0;i<=n*2;i++)pts.push([8+(i/(n*2))*84,50+((i%2===0)?-amp:amp)]);
+    return '<path d="'+ring(pts)+'"/>';
+  }
+  function cross(t){
+    var a=50-t,b=50+t;
+    return '<path d="'+roundPoly([[a,10],[b,10],[b,a],[90,a],[90,b],[b,b],[b,90],[a,90],[a,b],[10,b],[10,a],[a,a]],5)+'"/>';
+  }
+  function scallop(n){
+    var pts=[],steps=n*12;
+    for(var i=0;i<steps;i++){var a=(i/steps)*Math.PI*2,r=36+7*Math.cos(a*n);pts.push([50+Math.cos(a)*r,50+Math.sin(a)*r]);}
+    return '<path d="'+poly(pts)+'"/>';
+  }
+  function gear(n){
+    var pts=[];
+    for(var i=0;i<n;i++){
+      var a0=(i/n)*Math.PI*2,w=(Math.PI*2/n)*0.28;
+      pts.push([50+Math.cos(a0-w)*30,50+Math.sin(a0-w)*30]);
+      pts.push([50+Math.cos(a0-w*0.7)*42,50+Math.sin(a0-w*0.7)*42]);
+      pts.push([50+Math.cos(a0+w*0.7)*42,50+Math.sin(a0+w*0.7)*42]);
+      pts.push([50+Math.cos(a0+w)*30,50+Math.sin(a0+w)*30]);
+    }
+    return '<path fill-rule="evenodd" d="'+poly(pts)+' M62 50 A12 12 0 1 0 38 50 A12 12 0 1 0 62 50 Z"/>';
+  }
+  function dots(seed,n){
+    var R=rng(seed*5+n),out='';
+    for(var y=0;y<n;y++)for(var x=0;x<n;x++)
+      out+='<circle cx="'+N(14+x*(72/(n-1)))+'" cy="'+N(14+y*(72/(n-1)))+'" r="'+N(2+R()*6)+'"/>';
+    return out;
+  }
+  function gridp(n){
+    var out='';
+    for(var i=0;i<=n;i++){var p=N(12+i*(76/n));out+='<path d="M'+p+' 12 L'+p+' 88"/><path d="M12 '+p+' L88 '+p+'"/>';}
+    return out;
+  }
+  function stripes(n){
+    var out='';
+    for(var i=0;i<n;i++){var y=N(16+i*(68/(n-1)));out+='<path d="M10 '+y+' L90 '+y+'"/>';}
+    return out;
+  }
+
+  var GEO=[
+    {name:'Blob 5',tags:'blob organique goutte',fill:true,gen:function(s){return blob(s,5,.46);}},
+    {name:'Blob 7',tags:'blob organique',fill:true,gen:function(s){return blob(s,7,.34);}},
+    {name:'Blob 11',tags:'blob organique caillou',fill:true,gen:function(s){return blob(s,11,.22);}},
+    {name:'Pétale',tags:'fleur petale feuille',fill:true,gen:function(s){return flower(s,5,.42);}},
+    {name:'Fleur 8',tags:'fleur rosace',fill:true,gen:function(s){return flower(s,8,.30);}},
+    {name:'Rosace 12',tags:'fleur rosace mandala',fill:true,gen:function(s){return flower(s,12,.20);}},
+    {name:'Étoile 5',tags:'etoile star',fill:true,gen:function(){return star(5,.42,0);}},
+    {name:'Étoile ronde',tags:'etoile star arrondi',fill:true,gen:function(){return star(6,.48,5);}},
+    {name:'Éclat 16',tags:'etoile eclat soleil burst',fill:true,gen:function(){return star(16,.72,0);}},
+    {name:'Soleil',tags:'soleil rayons burst',fill:false,gen:function(){return sun(14);}},
+    {name:'Arche',tags:'arche porte fenetre',fill:true,gen:function(){return arch(.55);}},
+    {name:'Arche plein cintre',tags:'arche demi cercle',fill:true,gen:function(){return arch(1);}},
+    {name:'Quart de rond',tags:'quart cercle coin',fill:true,gen:function(){return 'M12 88 L12 34 A54 54 0 0 1 66 88 Z';}},
+    {name:'Feuille',tags:'feuille oeil lentille',fill:true,gen:function(){return 'M14 50 A50 50 0 0 1 86 50 A50 50 0 0 1 14 50 Z';}},
+    {name:'Squircle',tags:'carre arrondi superellipse',fill:true,gen:function(){return superellipse(4);}},
+    {name:'Superellipse 6',tags:'carre arrondi superellipse',fill:true,gen:function(){return superellipse(6);}},
+    {name:'Hexagone',tags:'hexagone polygone',fill:true,gen:function(){return ngon(6,8);}},
+    {name:'Triangle',tags:'triangle polygone',fill:true,gen:function(){return ngon(3,9);}},
+    {name:'Octogone',tags:'octogone polygone',fill:true,gen:function(){return ngon(8,3);}},
+    {name:'Anneau',tags:'anneau cercle donut',fill:false,gen:function(){return '<circle cx="50" cy="50" r="36"/>';}},
+    {name:'Cible',tags:'cible cercles concentrique',fill:false,gen:function(){return '<circle cx="50" cy="50" r="42"/><circle cx="50" cy="50" r="28"/><circle cx="50" cy="50" r="14"/>';}},
+    {name:'Croissant',tags:'croissant lune',fill:true,gen:function(){return 'M50 8 A42 42 0 1 0 50 92 A32 42 0 1 1 50 8 Z';}},
+    {name:'Goutte',tags:'goutte drop larme',fill:true,gen:function(){return 'M50 8 C 74 34, 88 50, 88 62 A38 38 0 0 1 12 62 C12 50, 26 34, 50 8 Z';}},
+    {name:'Vague',tags:'vague ondulation sinus',fill:false,gen:function(s){return wave(s,3,16);}},
+    {name:'Vague dense',tags:'vague ondulation',fill:false,gen:function(s){return wave(s,5,10);}},
+    {name:'Zigzag',tags:'zigzag chevron',fill:false,gen:function(){return zig(5,20);}},
+    {name:'Chevrons',tags:'chevron fleche',fill:false,gen:function(){return '<path d="M20 22 L50 46 L80 22"/><path d="M20 50 L50 74 L80 50"/>';}},
+    {name:'Croix',tags:'croix plus',fill:true,gen:function(){return cross(16);}},
+    {name:'Losange',tags:'losange diamant',fill:true,gen:function(){return '<path d="'+roundPoly([[50,10],[88,50],[50,90],[12,50]],7)+'"/>';}},
+    {name:'Feston',tags:'feston scalloped nuage',fill:true,gen:function(){return scallop(10);}},
+    {name:'Nuage',tags:'nuage feston',fill:true,gen:function(){return scallop(7);}},
+    {name:'Engrenage',tags:'engrenage roue dent',fill:true,gen:function(){return gear(12);}},
+    {name:'Spirale',tags:'spirale escargot',fill:false,gen:function(){return '<path d="'+spiral(50,50,4,40,0,2.2,1)+'"/>';}},
+    {name:'Gélule',tags:'gelule pilule capsule',fill:true,gen:function(){return '<rect x="10" y="32" width="80" height="36" rx="18"/>';}},
+    {name:'Demi-disque',tags:'demi cercle',fill:true,gen:function(){return 'M10 62 A40 40 0 0 1 90 62 Z';}},
+    {name:'Trame',tags:'trame points grille',fill:true,gen:function(s){return dots(s,5);}},
+    {name:'Grille',tags:'grille quadrillage',fill:false,gen:function(){return gridp(4);}},
+    {name:'Bandeau',tags:'bande rayures lignes',fill:false,gen:function(){return stripes(6);}}
+  ];
+
+  var ADINKRA=[
+    {name:'Adinkrahene',gloss:'Charisme, autorité, leadership',tags:'adinkrahene cercles chef',fill:false,
+     gen:function(){return '<circle cx="50" cy="50" r="42"/><circle cx="50" cy="50" r="28"/><circle cx="50" cy="50" r="14"/>';}},
+    {name:'Akoma',gloss:'Patience et tolérance',tags:'akoma coeur patience',fill:true,
+     gen:function(){return '<path d="M50 88 C 16 62, 10 36, 28 25 C 39 18, 48 25, 50 34 C 52 25, 61 18, 72 25 C 90 36, 84 62, 50 88 Z"/>';}},
+    {name:'Akoma Ntoso',gloss:'Entente, accord mutuel',tags:'akoma ntoso coeurs entente',fill:false,
+     gen:function(){
+       var h='<path d="M0 26 C -17 13, -20 -1, -11 -7 C -5 -11, -1 -7, 0 -2 C 1 -7, 5 -11, 11 -7 C 20 -1, 17 13, 0 26 Z"/>',out='';
+       for(var i=0;i<4;i++)out+='<g transform="rotate('+(i*90)+' 50 50) translate(50 26)">'+h+'</g>';
+       return out;}},
+    {name:'Nsoromma',gloss:'Enfant des cieux, tutelle divine',tags:'nsoromma etoile ciel',fill:false,
+     gen:function(){
+       var pts=[];
+       for(var i=0;i<10;i++){var a=(i/10)*Math.PI*2-Math.PI/2,r=(i%2===0)?40:17;pts.push([50+Math.cos(a)*r,50+Math.sin(a)*r]);}
+       return '<path d="'+poly(pts)+'"/><circle cx="50" cy="50" r="6"/>';}},
+    {name:'Nkyinkyim',gloss:'Initiative, endurance, adaptation',tags:'nkyinkyim zigzag chemin',fill:false,
+     gen:function(){return '<path d="M14 86 L14 62 L38 62 L38 38 L62 38 L62 62 L86 62 L86 22"/>';}},
+    {name:'Nyame Dua',gloss:'Autel, présence protectrice de Dieu',tags:'nyame dua autel dieu',fill:false,
+     gen:function(){
+       var out='<circle cx="50" cy="50" r="9"/>';
+       for(var i=0;i<4;i++)out+=rot('<path d="M50 41 C 40 30, 34 20, 50 10 C 66 20, 60 30, 50 41 Z"/>',i*90);
+       return out;}},
+    {name:'Fihankra',gloss:'Foyer, sécurité de la maisonnée',tags:'fihankra maison securite',fill:false,
+     gen:function(){return '<path d="M62 18 L18 18 L18 82 L82 82 L82 42"/><path d="M62 18 L62 42 L82 42"/>';}},
+    {name:'Eban',gloss:'Clôture, amour et protection',tags:'eban cloture amour',fill:false,
+     gen:function(){return '<path d="M20 20 L80 20 L80 80 L20 80 Z"/><path d="M34 20 L34 80"/><path d="M50 20 L50 80"/><path d="M66 20 L66 80"/><path d="M20 50 L80 50"/>';}},
+    {name:'Aya',gloss:'Fougère : endurance, débrouillardise',tags:'aya fougere endurance',fill:false,
+     gen:function(){
+       var out='<path d="M50 92 L50 14"/>';
+       for(var i=0;i<5;i++){
+         var y=26+i*13,s=1-i*0.13;
+         out+='<path d="M50 '+y+' C '+N(50-26*s)+' '+N(y-9*s)+', '+N(50-30*s)+' '+N(y+7*s)+', '+N(50-8*s)+' '+N(y+10*s)+'"/>';
+         out+='<path d="M50 '+y+' C '+N(50+26*s)+' '+N(y-9*s)+', '+N(50+30*s)+' '+N(y+7*s)+', '+N(50+8*s)+' '+N(y+10*s)+'"/>';
+       }
+       return out;}},
+    {name:'Dwennimmen',gloss:'Cornes de bélier : force et humilité',tags:'dwennimmen belier humilite force',fill:false,
+     gen:function(){
+       var out='';
+       for(var i=0;i<4;i++)out+=rot('<path d="'+spiral(32,32,3,17,Math.PI*0.35,1.05,-1)+'"/>',i*90);
+       return out;}},
+    {name:'Sankofa',gloss:'Revenir chercher ce qu’on a laissé',tags:'sankofa retour memoire passe',fill:false,
+     gen:function(){return '<path d="M50 90 C 22 74, 18 42, 36 28 C 48 19, 62 24, 64 38 C 66 50, 56 57, 48 52 C 43 49, 43 42, 48 40"/><path d="M50 90 C 78 74, 82 42, 64 28"/>';}}
+  ];
+
+  var fs={seed:1,mode:'auto',weight:6,color:null,q:''};
+  function fsColor(){return fs.color||ink();}
+  function fsSvg(item,color){
+    var raw=item.gen(fs.seed);
+    if(raw.charAt(0)!=='<')raw='<path d="'+raw+'"/>';
+    var stroked=(fs.mode==='stroke')||(fs.mode==='auto'&&!item.fill);
+    var attrs=stroked
+      ?'fill="none" stroke="'+color+'" stroke-width="'+fs.weight+'" stroke-linecap="round" stroke-linejoin="round"'
+      :'fill="'+color+'"';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><g '+attrs+'>'+raw+'</g></svg>';
+  }
+  function buildFonds(list,host,isAdi){
+    host.innerHTML='';
+    var color=fsColor(),q=fs.q.toLowerCase().trim(),shown=0;
+    list.forEach(function(item){
+      if(q&&(item.name+' '+item.tags).toLowerCase().indexOf(q)===-1)return;
+      shown++;
+      var b=document.createElement('button');
+      b.type='button'; b.className='tile';
+      b.setAttribute('aria-label','Copier le SVG de '+item.name);
+      b.innerHTML='<span class="tile__art">'+fsSvg(item,color)+'</span><span class="tile__meta"><span class="tile__name">'+item.name+'</span>'
+        +(isAdi?'<span class="tile__gloss">'+item.gloss+'</span>':'')+'</span><span class="tile__tag">SVG</span>';
+      b.addEventListener('click',function(){ copyText(fsSvg(item,fsColor()),'SVG copié · '+item.name,b); });
+      host.appendChild(b);
+    });
+    return shown;
+  }
+  function renderFonds(){
+    var a=buildFonds(GEO,document.getElementById('grid-geo'),false);
+    var b=buildFonds(ADINKRA,document.getElementById('grid-adinkra'),true);
+    document.getElementById('n-adinkra').textContent=b+' symboles';
+    var t=(a+b)+' / '+(GEO.length+ADINKRA.length);
+    document.getElementById('count').textContent=t+' pièces';
+    document.getElementById('count2').textContent=t;
+  }
+  document.getElementById('q').addEventListener('input',function(e){fs.q=e.target.value;renderFonds();});
+  document.getElementById('w').addEventListener('input',function(e){fs.weight=parseFloat(e.target.value);renderFonds();});
+  document.getElementById('c').addEventListener('input',function(e){fs.color=e.target.value;renderFonds();});
+  document.getElementById('reseed').addEventListener('click',function(){
+    fs.seed=(fs.seed*1664525+1013904223)>>>0;renderFonds();toast('Nouveau tirage');
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#mode button'),function(btn){
+    btn.addEventListener('click',function(){
+      fs.mode=btn.dataset.v;
+      Array.prototype.forEach.call(document.querySelectorAll('#mode button'),function(o){o.setAttribute('aria-pressed',String(o===btn));});
+      renderFonds();
+    });
+  });
+
+  /* ---------------- init ---------------- */
+  try{
+    var i0=ink();
+    if(/^#[0-9a-f]{6}$/i.test(i0))document.getElementById('c').value=i0;
+  }catch(e){}
+
+  var ti=todayIndex();
+  var latest=MOTIFS[MOTIFS.length-1];
+  for(var k=0;k<MOTIFS.length;k++) if(MOTIFS[k].day===ti) latest=MOTIFS[k];
+  showMotif(latest);
+  buildYear();
+  renderFonds();
+})();
+</script>
