@@ -2,44 +2,61 @@
 
 Tâche récurrente : **imprimer un motif par jour, du 19 août 2026 au 18 août 2027.**
 
-## Où
+Une exécution = les motifs manquants jusqu'à aujourd'hui inclus. Le déploiement
+est automatique : un commit poussé sur `main` met la plateforme en ligne.
+
+## Repères
 
 | | |
 |---|---|
-| Source | `calebasse/index.html` (fichier unique, autonome) |
-| Artifact | https://claude.ai/code/artifact/05df6cef-3986-4c45-b1f2-6af1b2cead1d |
+| Source | `index.html` — fichier unique, autonome, à la racine du dépôt |
 | Registre | bloc délimité par `/* === MOTIFS:START` et `/* === MOTIFS:END` |
-| Jour 1 | 19 août 2026 |
+| Jour 1 | 19 août 2026 · Jour 365 : 18 août 2027 |
+| Mise en ligne | commit sur `main` → déploiement Netlify automatique |
 
-## Procédure (une exécution = un jour)
+## Procédure
 
-1. **Lire** `calebasse/index.html` et repérer le dernier objet du tableau `MOTIFS`.
-   Le numéro du jour à produire = `dernier.day + 1`.
-   Vérifier la date : jour N ↔ 19 août 2026 + (N−1) jours. Si le motif du jour existe
-   déjà, **ne rien faire** et s'arrêter — jamais deux entrées pour la même journée.
-2. **Composer** le motif (voir contraintes ci-dessous).
-3. **Insérer** la nouvelle entrée juste avant la ligne `/* === MOTIFS:END`,
-   en ajoutant une virgule après l'entrée précédente. Ne jamais modifier
-   ni régénérer une entrée déjà publiée : le registre est append-only.
-4. **Vérifier** le rendu (serveur local + capture) : la tuile doit se raccorder
-   sans couture visible dans la bande répétée.
-5. **Republier** l'artifact avec le paramètre `url` ci-dessus pour conserver
-   la même adresse, et le label `calebasse-365-jour-NNN`.
+1. **Situer la date.** Relever la date du jour (`date -u +%F`) et calculer
+   `jourAttendu = 1 + (aujourd'hui − 2026-08-19) en jours`.
+   Si `jourAttendu > 365`, ne rien faire : la pièce est terminée.
+2. **Lire le registre** dans `index.html` et relever le `day` du dernier objet
+   du tableau `MOTIFS`.
+   - Si `dernier.day >= jourAttendu` : le travail du jour est fait, s'arrêter
+     sans rien modifier et sans commit.
+   - Sinon, produire **tous** les motifs de `dernier.day + 1` à `jourAttendu`.
+     Chacun est un dessin distinct, jamais une variante du précédent.
+3. **Composer** chaque motif selon les contraintes ci-dessous.
+4. **Insérer** les nouvelles entrées juste avant la ligne `/* === MOTIFS:END`,
+   en ajoutant une virgule après l'entrée précédente. Le registre est
+   **append-only** : ne jamais modifier, réordonner ni supprimer une entrée
+   déjà publiée.
+5. **Vérifier** avant de commiter :
+   - `python3 -m http.server` puis charger la page — aucune erreur console,
+     le compteur affiche le bon nombre de motifs imprimés ;
+   - le raccord de chaque nouvelle tuile est invisible dans la bande répétée
+     (un tracé qui touche `x=0` à la hauteur `y` doit toucher `x=100` à la
+     même hauteur, idem pour `y=0` / `y=100`) ;
+   - le JSON du tableau reste valide (virgules, apostrophes échappées).
+   Si la vérification échoue, corriger avant de commiter — ne jamais pousser
+   une page cassée.
+6. **Commiter et pousser** sur `main`, un commit par exécution :
+   `Motif 007 — Nom du motif` (ou `Motifs 007-009 — rattrapage` si plusieurs).
+   Le déploiement suit tout seul.
 
 ## Contraintes de dessin
 
-- **Format** : tuile `viewBox="0 0 100 100"`, raccord invisible sur les quatre bords.
-  Tout élément qui coupe un bord doit être répété à l'identique sur le bord opposé
-  (un tracé qui touche `x=0` à la hauteur `y` doit toucher `x=100` à la même hauteur).
+- **Format** : tuile `viewBox="0 0 100 100"`, raccord invisible sur les quatre
+  bords. Tout élément coupé par un bord est répété à l'identique sur le bord
+  opposé.
 - **Nature** : une surface, pas une icône. Le motif doit tenir en fond de plan,
   en textile, en décor animé.
 - **Écriture** : SVG littéral dans le champ `inner`, figé une fois publié.
   Pas de fonction génératrice — un motif imprimé ne bouge plus.
 - **Champs** : `day`, `name`, `family`, `note`, `mode` (`'stroke'` ou `'fill'`),
   `weight`, `inner`.
-- **Variété** : ne pas répéter la famille de la veille. Familles ouvertes —
-  Registres, Trames, Tissages, Damiers, Vagues, Écailles, Treillis, Semis,
-  Chevrons, Spirales, Cercles, Grains.
+- **Variété** : ne pas reprendre la famille de la veille, ni un tracé déjà
+  publié. Familles ouvertes — Registres, Trames, Tissages, Damiers, Vagues,
+  Écailles, Treillis, Semis, Chevrons, Spirales, Cercles, Grains.
 - **Note** : deux à quatre phrases. Ce qui est dessiné, d'où ça vient, ce que
   la répétition produit. Pas de remplissage lyrique.
 
@@ -55,7 +72,7 @@ adinkra, trames bogolan, structures kente, scarifications, wax.
   inventer et nommer en français.
 - Ne jamais attribuer un sens ou un proverbe à un motif inventé.
 
-## Arrêt
+## Fin de série
 
-Au jour 365 (18 août 2027), publier le dernier motif puis supprimer la tâche
-planifiée. Passé cette date, ne rien ajouter.
+Au jour 365 (18 août 2027), pousser le dernier motif, puis signaler que la
+routine peut être supprimée. Passé cette date, ne rien ajouter.
