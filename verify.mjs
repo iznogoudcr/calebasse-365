@@ -151,7 +151,80 @@ for (const m of MOTIFS) {
   if (out) fail(`${tag} : point (${out[0]}, ${out[1]}) hors de la tuile 0–100`);
 }
 
-/* ---------- 5. verdict ---------- */
+/* ---------- 5. le fonds : FORMES (append-only) ---------- */
+const fStart = html.indexOf('/* === FORMES:START');
+const fEnd = html.indexOf('/* === FORMES:END');
+if (fStart === -1 || fEnd === -1 || fEnd < fStart) {
+  console.error('✗ marqueurs FORMES:START / FORMES:END introuvables ou inversés');
+  process.exit(1);
+}
+const fOpen = html.indexOf('[', html.indexOf('var FORMES', fStart));
+const fLiteral = html.slice(fOpen, fEnd).trimEnd().replace(/,\s*$/, '') + ']';
+let FORMES;
+try {
+  FORMES = new Function(`"use strict"; return (${fLiteral});`)();
+} catch (e) {
+  console.error("✗ le tableau FORMES ne s'évalue pas — virgule ou apostrophe non échappée ?");
+  console.error('  ' + e.message);
+  process.exit(1);
+}
+if (!Array.isArray(FORMES) || FORMES.length === 0) { console.error('✗ FORMES est vide'); process.exit(1); }
+
+const FORME_FIELDS = ['day', 'name', 'family', 'inner'];
+FORMES.forEach((f, i) => {
+  const tag = `forme #${i + 1} (day ${f && f.day})`;
+  if (!f || typeof f !== 'object') return fail(`${tag} : ce n'est pas un objet`);
+  for (const k of FORME_FIELDS) if (f[k] === undefined) fail(`${tag} : champ « ${k} » manquant`);
+  if (typeof f.name === 'string' && !f.name.trim()) fail(`${tag} : nom vide`);
+  if (f.day !== i + 1) fail(`${tag} : numérotation discontinue — attendu day ${i + 1}`);
+});
+
+const fNames = new Map(), fInners = new Map();
+for (const f of FORMES) {
+  const nk = String(f.name || '').toLowerCase().trim();
+  if (fNames.has(nk)) fail(`forme « ${f.name} » : nom déjà utilisé au jour ${fNames.get(nk)}`);
+  fNames.set(nk, f.day);
+  const ik = String(f.inner || '').replace(/\s+/g, '');
+  if (fInners.has(ik)) fail(`forme jour ${f.day} : tracé identique au jour ${fInners.get(ik)}`);
+  fInners.set(ik, f.day);
+}
+
+/* toute forme doit être un tracé fermé et plein — pas de fragment ouvert */
+for (const f of FORMES) {
+  const tag = `forme jour ${String(f.day).padStart(3, '0')} « ${f.name} »`;
+  const inner = String(f.inner || '');
+  if (/\bstroke=/.test(inner) || /fill="none"/.test(inner)) fail(`${tag} : trait/contour détecté — les formes sont pleines, sans exception`);
+  for (const mm of inner.matchAll(/\bd="([^"]+)"/g)) {
+    const d = mm[1];
+    const ms = (d.match(/M/g) || []).length, zs = (d.match(/Z/gi) || []).length;
+    if (ms !== zs) fail(`${tag} : sous-tracé non refermé (${ms} M pour ${zs} Z)`);
+  }
+  const { pts, relative, unknown } = geometryOf(inner);
+  if (relative) { warn(`${tag} : commandes de chemin relatives — bornes non vérifiables`); continue; }
+  if (unknown) { warn(`${tag} : commande « ${unknown} » non gérée — bornes non vérifiables`); continue; }
+  const out = pts.find(([x, y]) => x < -EPS || x > 100 + EPS || y < -EPS || y > 100 + EPS);
+  if (out) fail(`${tag} : point (${out[0]}, ${out[1]}) hors de la tuile 0–100`);
+}
+
+/* ---------- 6. le fonds : ADINKRA (jeu fixe) ---------- */
+const aOpenIdx = html.indexOf('var ADINKRA');
+const aOpen = html.indexOf('[', aOpenIdx);
+const aCloseRel = html.slice(aOpen).indexOf('\n  ];');
+const ADINKRA = aOpenIdx === -1 ? [] : new Function(`"use strict"; return (${html.slice(aOpen, aOpen + aCloseRel + 1).trimEnd().replace(/,\s*$/, '')}]);`)();
+
+const aNames = new Set();
+for (const a of ADINKRA) {
+  const tag = `symbole « ${a.name} »`;
+  if (aNames.has(a.name)) fail(`${tag} : nom en double`);
+  aNames.add(a.name);
+  const inner = String(a.inner || '');
+  const { pts, relative, unknown } = geometryOf(inner);
+  if (relative || unknown) { warn(`${tag} : bornes non vérifiables`); continue; }
+  const out = pts.find(([x, y]) => x < -EPS || x > 100 + EPS || y < -EPS || y > 100 + EPS);
+  if (out) fail(`${tag} : point (${out[0]}, ${out[1]}) hors de la tuile 0–100`);
+}
+
+/* ---------- 7. verdict ---------- */
 const n = MOTIFS.length;
 for (const w of warnings) console.warn('⚠ ' + w);
 if (errors.length) {
@@ -159,5 +232,5 @@ if (errors.length) {
   console.error(`\n${errors.length} erreur(s) — ne pas publier.`);
   process.exit(1);
 }
-console.log(`✓ registre valide — ${n} motif${n > 1 ? 's' : ''} sur 365${warnings.length ? `, ${warnings.length} avertissement(s)` : ''}.`);
+console.log(`✓ registre valide — ${n} motif${n > 1 ? 's' : ''} sur 365, ${FORMES.length} forme${FORMES.length > 1 ? 's' : ''}, ${ADINKRA.length} symbole${ADINKRA.length > 1 ? 's' : ''} Adinkra${warnings.length ? `, ${warnings.length} avertissement(s)` : ''}.`);
 console.log("  Reste à juger à l'œil : la continuité du dessin sur l'étoffe en haut de page.");
